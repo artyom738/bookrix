@@ -14,8 +14,7 @@ BitrixVue.component('bookrix-booklist', {
 	created() {
 		this.loadBooks();
 	},
-	methods:
-	{
+	methods: {
 		loadBooks()
 		{
 			let params = {
@@ -28,7 +27,7 @@ BitrixVue.component('bookrix-booklist', {
 						this.books.push(item);
 					}, this);
 					this.title = 'Список книг';
-			})
+				})
 				.catch(response => console.error(response.errors))
 		},
 

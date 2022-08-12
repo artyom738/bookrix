@@ -2,7 +2,7 @@ import { BitrixVue } from 'ui.vue';
 import './css/Book.css';
 
 BitrixVue.component('bookrix-book', {
-	props: ['book', 'showDesc'],
+	props: ['book', 'showDesc', 'bookId'],
 	data()
 	{
 		return {
@@ -21,6 +21,28 @@ BitrixVue.component('bookrix-book', {
 				return BX.date.format('d F Y', date)
 			}
 		},
+	computed: {
+		getBook()
+		{
+			if (!this.book)
+			{
+				BX.ajax.runAction('up:bookrix.bookcontroller.getById', {data: { 'id': this.bookId } })
+					.then(response => {
+						this.book = response.data;
+						return response.data;
+					})
+					.catch(response => {
+						console.error(response.errors);
+					})
+			}
+
+			return this.book;
+		}
+	},
+	mounted()
+	{
+		this.getBook();
+	},
 	// language=Vue
 	template: `
 		<div class="book-item">

@@ -34,10 +34,6 @@ export class BookrixApp
 				this.data = data;
 				return data;
 			},
-			mounted()
-			{
-			},
-			methods: {},
 			// language=Vue
 			template: `
               <div>
@@ -47,7 +43,7 @@ export class BookrixApp
               <div class="container">
 				
                 <bookrix-navbar :componentName="data.COMPONENT"/>
-                <bookrix-page :componentName="data.COMPONENT"/>
+                <bookrix-page :componentName="data.COMPONENT" :bookId="data.BOOK_ID"/>
               </div>
               <bookrix-footer/>
               </div>

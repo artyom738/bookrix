@@ -103,7 +103,7 @@
 	});
 
 	ui_vue.BitrixVue.component('bookrix-book', {
-	  props: ['book', 'showDesc'],
+	  props: ['book', 'showDesc', 'bookId'],
 	  data: function data() {
 	    return {
 	      fieldsMap: {
@@ -117,6 +117,29 @@
 	    getDate: function getDate(date) {
 	      return BX.date.format('d F Y', date);
 	    }
+	  },
+	  computed: {
+	    getBook: function getBook() {
+	      var _this = this;
+
+	      if (!this.book) {
+	        BX.ajax.runAction('up:bookrix.bookcontroller.getById', {
+	          data: {
+	            'id': this.bookId
+	          }
+	        }).then(function (response) {
+	          _this.book = response.data;
+	          return response.data;
+	        })["catch"](function (response) {
+	          console.error(response.errors);
+	        });
+	      }
+
+	      return this.book;
+	    }
+	  },
+	  mounted: function mounted() {
+	    this.getBook();
 	  },
 	  // language=Vue
 	  template: "\n\t\t<div class=\"book-item\">\n\t\t\t<div class=\"book-item-title\">\n\t\t\t  <template v-if=\"book.ID\">\n              \t<a v-bind:href=\"'/books/' + book.ID\">{{ book.TITLE }}</a>\n              </template>\n\t\t\t  <template v-else>\n\t\t\t\t{{ book.TITLE }}\n\t\t\t  </template>\n\t\t\t</div>\n\t\t\t\n            <template v-for=\"(value, index) in book\">\n\t\t\t  <template v-if=\"(Object.keys(fieldsMap)).includes(index)\">\n                <div class=\"book-item-spec\">\n\t\t\t\t  {{ fieldsMap[index] }}: {{value}}\n\t\t\t\t</div>\n\t\t\t  </template>\n\t\t\t  <template v-else-if=\"index === 'DATE_ADD'\">\n\t\t\t\t<div class=\"book-item-spec\">\n\t\t\t\t  \u0414\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0430:  {{getDate(value)}}\n\t\t\t\t</div>\n\t\t\t  </template>\n\t\t\t  <template v-else-if=\"index === 'DESCRIPTION' && showDesc\">\n                <div class=\"book-item-spec\">\n                  \u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435:  {{value}}\n                </div>\n\t\t\t  </template>\n            </template>\n\t\t</div>\n\t\t"
@@ -283,9 +306,10 @@
 	});
 
 	ui_vue.BitrixVue.component('bookrix-page', {
-	  props: ['componentName'],
+	  props: ['componentName', 'bookId'],
+	  computed: {},
 	  // language=Vue
-	  template: "\n      <div class=\"page-container\">\n      <template v-if=\"componentName === 'main'\">\n        <bookrix-booklist :isMainPage=\"true\"/>\n      </template>\n\n      <template v-if=\"componentName === 'add'\">\n        <bookrix-add-book/>\n      </template>\n\n      <template v-if=\"componentName === 'booklist'\">\n        <div class=\"booklist-container\">\n\t\t  <bookrix-book-filters/>\n\t\t  \n          <bookrix-booklist :isMainPage=\"false\"/>\n\t\t  \n        </div>\n      </template>\n\n      <template v-if=\"componentName === 'detailed'\">\n        <bookrix-book/>\n      </template>\n      </div>\n\t"
+	  template: "\n      <div class=\"page-container\">\n      <template v-if=\"componentName === 'main'\">\n        <bookrix-booklist :isMainPage=\"true\"/>\n      </template>\n\n      <template v-if=\"componentName === 'add'\">\n        <bookrix-add-book/>\n      </template>\n\n      <template v-if=\"componentName === 'booklist'\">\n        <div class=\"booklist-container\">\n          <bookrix-book-filters/>\n\n          <bookrix-booklist :isMainPage=\"false\"/>\n\n        </div>\n      </template>\n\n      <template v-if=\"componentName === 'detailed'\">\n        <bookrix-book :bookId=\"bookId\" :showDesc=\"true\"/>\n      </template>\n      </div>\n\t"
 	});
 
 	var BookrixApp = /*#__PURE__*/function () {
@@ -313,10 +337,8 @@
 	          this.data = _data;
 	          return _data;
 	        },
-	        mounted: function mounted() {},
-	        methods: {},
 	        // language=Vue
-	        template: "\n              <div>\n              <div class=\"header-container\">\n                <bookrix-header/>\n              </div>\n              <div class=\"container\">\n\t\t\t\t\n                <bookrix-navbar :componentName=\"data.COMPONENT\"/>\n                <bookrix-page :componentName=\"data.COMPONENT\"/>\n              </div>\n              <bookrix-footer/>\n              </div>\n\t\t\t"
+	        template: "\n              <div>\n              <div class=\"header-container\">\n                <bookrix-header/>\n              </div>\n              <div class=\"container\">\n\t\t\t\t\n                <bookrix-navbar :componentName=\"data.COMPONENT\"/>\n                <bookrix-page :componentName=\"data.COMPONENT\" :bookId=\"data.BOOK_ID\"/>\n              </div>\n              <bookrix-footer/>\n              </div>\n\t\t\t"
 	      }).mount(this.rootNode);
 	    }
 	  }]);

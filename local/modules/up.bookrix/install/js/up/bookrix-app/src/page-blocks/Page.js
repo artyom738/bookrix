@@ -5,7 +5,10 @@ import './Add-Book';
 import './css/Page.css';
 
 BitrixVue.component('bookrix-page', {
-	props: ['componentName'],
+	props: ['componentName', 'bookId'],
+	computed: {
+
+	},
 	// language=Vue
 	template: `
       <div class="page-container">
@@ -19,15 +22,15 @@ BitrixVue.component('bookrix-page', {
 
       <template v-if="componentName === 'booklist'">
         <div class="booklist-container">
-		  <bookrix-book-filters/>
-		  
+          <bookrix-book-filters/>
+
           <bookrix-booklist :isMainPage="false"/>
-		  
+
         </div>
       </template>
 
       <template v-if="componentName === 'detailed'">
-        <bookrix-book/>
+        <bookrix-book :bookId="bookId" :showDesc="true"/>
       </template>
       </div>
 	`,

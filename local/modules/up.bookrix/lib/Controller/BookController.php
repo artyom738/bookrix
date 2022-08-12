@@ -39,6 +39,11 @@ class BookController extends Main\Engine\Controller
 		}
 	}
 
+	public function getByIdAction($id)
+	{
+		return BookTable::getById($id)->fetch();
+	}
+
 	public function configureActions()
 	{
 		return [
@@ -58,6 +63,11 @@ class BookController extends Main\Engine\Controller
 				]
 			],
 			'getMinMaxPages' => [
+				'-prefilters' => [
+					Main\Engine\ActionFilter\Csrf::class,
+				]
+			],
+			'getById' => [
 				'-prefilters' => [
 					Main\Engine\ActionFilter\Csrf::class,
 				]
