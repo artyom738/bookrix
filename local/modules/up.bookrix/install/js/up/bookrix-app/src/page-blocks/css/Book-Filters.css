@@ -1,0 +1,48 @@
+.bookrix-filters {
+	display: flex;
+	flex-direction: column;
+	background-color: #fff;
+	margin: 10px;
+	padding: 10px;
+	border-radius: 10px;
+	width: 20%;
+	box-shadow: 5px 5px 5px rgb(0 0 0 / 30%);
+}
+
+.bookrix-filter-title {
+	font-size: 20px;
+	font-weight: bold;
+	text-align: center;
+	padding: 10px;
+}
+
+.bookrix-filter {
+	margin: 10px;
+	text-align: center;
+}
+
+.bookrix-filter-subtitle
+{
+	font-size: 16px;
+	text-align: center;
+	margin: 8px;
+}
+
+.bookrix-filter-authors {
+	display: flex;
+	flex-direction: column;
+	max-height: 200px;
+	overflow: auto;
+}
+
+.bookrix-filter-author {
+	display: flex;
+	flex-direction: row;
+	margin: 5px;
+}
+
+.bookrix-filter-pages {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+}

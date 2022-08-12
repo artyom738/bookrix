@@ -1,0 +1,27 @@
+.add-container {
+	max-width: 1000px;
+	margin: 0 auto;
+}
+
+.add-book {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	background-color: #fff;
+	margin: 0;
+	padding: 30px;
+	border-radius: 20px;
+	box-shadow: 5px 5px 5px rgba(0,0,0,.3);
+}
+
+.add-book div
+{
+	margin: 5px !important;
+}
+
+.add-book-title {
+	font-size: 24px;
+	font-weight: bold;
+	text-align: center;
+	margin: 16px;
+}

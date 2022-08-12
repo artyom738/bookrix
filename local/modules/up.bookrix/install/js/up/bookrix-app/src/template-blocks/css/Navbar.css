@@ -1,0 +1,11 @@
+.bookrix-navbar {
+	display: flex;
+	flex-direction: row;
+	max-width: 1000px;
+	margin: 0 auto;
+	padding: 20px;
+}
+
+.bookrix-navbar a {
+	padding: 0 10px;
+}

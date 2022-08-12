@@ -1,0 +1,13 @@
+.book-list {
+	display: flex;
+	flex-direction: column;
+	max-width: 1000px;
+	margin: 0 auto;
+}
+
+.book-list-title {
+	font-size: 26px;
+	font-weight: bold;
+	text-align: center;
+	margin: 20px 0;
+}

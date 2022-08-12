@@ -1,0 +1,21 @@
+.book-item {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	background-color: #fff;
+	margin: 20px;
+	padding: 30px;
+	border-radius: 20px;
+	box-shadow: 5px 5px 5px rgba(0,0,0,.3);
+}
+
+.book-item-title {
+	font-size: 32px;
+	font-weight: bold;
+	margin-bottom: 10px;
+}
+
+.book-item-spec {
+	font-size: 20px;
+	margin: 5px 0;
+}

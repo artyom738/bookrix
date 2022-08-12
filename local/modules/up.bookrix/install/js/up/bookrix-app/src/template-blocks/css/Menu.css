@@ -1,0 +1,19 @@
+.menu {
+	display: flex;
+	flex-direction: row;
+	height: 100%;
+}
+
+.menu-item {
+	display: flex;
+	align-items: center;
+	height: 100%;
+	padding: 0 20px;
+	transition: .3s ease;
+	cursor: pointer;
+
+}
+
+.menu-item:hover {
+	background-color: #c0eaff;
+}
