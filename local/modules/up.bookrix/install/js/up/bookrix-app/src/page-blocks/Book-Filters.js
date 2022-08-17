@@ -1,7 +1,7 @@
 import { BitrixVue } from 'ui.vue';
-import { EventEmitter } from 'bitrix/modules/main/install/js/main/core/events/src/events.js'
 import './css/Book-Filters.css';
 import { BooksGetter } from '../lib/get';
+import { EventEmitter } from 'main.core.events';
 
 BitrixVue.component('bookrix-book-filters', {
 	props: [],
@@ -53,7 +53,7 @@ BitrixVue.component('bookrix-book-filters', {
 		},
 		reloadFilters()
 		{
-			EventEmitter.emit('Bookrix.refreshBooks');
+			EventEmitter.emit('Bookrix.refreshBooks').data({params: this.filters});
 		}
 	},
 	// language=Vue

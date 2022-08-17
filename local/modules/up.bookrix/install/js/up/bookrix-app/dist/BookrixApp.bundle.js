@@ -1,4 +1,4 @@
-(function (exports,main_core,events_js,ui_vue) {
+(function (exports,main_core,main_core_events,ui_vue) {
 	'use strict';
 
 	var menuItems = [{
@@ -218,6 +218,7 @@
 	    loadBooks: function loadBooks() {
 	      var _this = this;
 
+	      main_core_events.EventEmitter.subscribe('Bookrix.refreshBooks', function (event) {});
 	      var params = {
 	        'limit': 3,
 	        'order': {
@@ -281,7 +282,9 @@
 	      return id;
 	    },
 	    reloadFilters: function reloadFilters() {
-	      events_js.EventEmitter.emit('Bookrix.refreshBooks');
+	      main_core_events.EventEmitter.emit('Bookrix.refreshBooks').data({
+	        params: this.filters
+	      });
 	    }
 	  },
 	  // language=Vue
@@ -390,11 +393,12 @@
 	    value: function attachTemplate(_data) {
 	      ui_vue.BitrixVue.createApp({
 	        data: function data() {
-	          this.data = _data;
-	          return _data;
+	          return {
+	            data: _data
+	          };
 	        },
 	        // language=Vue
-	        template: "\n              <div>\n              <div class=\"header-container\">\n                <bookrix-header/>\n              </div>\n              <div class=\"container\">\n                <bookrix-navbar :componentName=\"data.COMPONENT\" :bookId=\"data.BOOK_ID\"/>\n                <bookrix-page :componentName=\"data.COMPONENT\" :bookId=\"data.BOOK_ID\"/>\n              </div>\n              <bookrix-footer/>\n              </div>\n\t\t\t"
+	        template: "\n\t\t\t\t<div>\n\t\t\t\t\t<div class=\"header-container\">\n\t\t\t\t\t\t<bookrix-header/>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class=\"container\">\n\t\t\t\t\t\t<bookrix-navbar :componentName=\"data.COMPONENT\" :bookId=\"data.BOOK_ID\"/>\n\t\t\t\t\t\t<bookrix-page :componentName=\"data.COMPONENT\" :bookId=\"data.BOOK_ID\"/>\n\t\t\t\t\t</div>\n\t\t\t\t\t<bookrix-footer/>\n\t\t\t\t</div>\n\t\t\t"
 	      }).mount(this.rootNode);
 	    }
 	  }]);
@@ -403,4 +407,4 @@
 
 	exports.BookrixApp = BookrixApp;
 
-}((this.BX = this.BX || {}),BX,BX,BX));
+}((this.BX = this.BX || {}),BX,BX.Event,BX));

@@ -2,6 +2,8 @@ import { BitrixVue } from 'ui.vue';
 import './Book';
 import './css/Book-List.css';
 import { BooksGetter } from '../lib/get';
+import { EventEmitter } from 'main.core.events';
+
 
 BitrixVue.component('bookrix-booklist', {
 	props: ['isMainPage'],
@@ -18,6 +20,9 @@ BitrixVue.component('bookrix-booklist', {
 	methods: {
 		loadBooks()
 		{
+			EventEmitter.subscribe('Bookrix.refreshBooks', (event) => {
+
+			})
 			let params = {
 				'limit': 3,
 				'order': { 'RATING': 'DESC' },

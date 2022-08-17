@@ -6,6 +6,7 @@ import './template-blocks/Navbar';
 import './page-blocks/Page';
 import './template-blocks/css/reset.css';
 
+
 export class BookrixApp
 {
 	constructor(options)
