@@ -31,22 +31,22 @@ export class BookrixApp
 		BitrixVue.createApp({
 			data()
 			{
-				this.data = data;
-				return data;
+				return {
+					data: data
+				};
 			},
 			// language=Vue
 			template: `
-              <div>
-              <div class="header-container">
-                <bookrix-header/>
-              </div>
-              <div class="container">
-				
-                <bookrix-navbar :componentName="data.COMPONENT"/>
-                <bookrix-page :componentName="data.COMPONENT" :bookId="data.BOOK_ID"/>
-              </div>
-              <bookrix-footer/>
-              </div>
+				<div>
+					<div class="header-container">
+						<bookrix-header/>
+					</div>
+					<div class="container">
+						<bookrix-navbar :componentName="data.COMPONENT" :bookId="data.BOOK_ID"/>
+						<bookrix-page :componentName="data.COMPONENT" :bookId="data.BOOK_ID"/>
+					</div>
+					<bookrix-footer/>
+				</div>
 			`,
 		}).mount(this.rootNode);
 	}

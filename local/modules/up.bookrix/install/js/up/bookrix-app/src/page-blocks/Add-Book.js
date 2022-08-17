@@ -55,10 +55,11 @@ BitrixVue.component('bookrix-add-book', {
 			BX.ajax.runAction('up:bookrix.bookcontroller.addBook', {data: { data: params }})
 				.then(response => {
 					BX.UI.Notification.Center.notify({ content: "Книга сохранена!" });
+					this.bookId = response.data['ID'];
+					window.location = '/books/' + this.bookId;
 					})
 				.catch(response => {
 					BX.UI.Notification.Center.notify({ content: "Ошибка сохранения книги!" });
-					console.error(response.errors)
 				});
 			this.title = '';
 			this.author = '';

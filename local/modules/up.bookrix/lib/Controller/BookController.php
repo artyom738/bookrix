@@ -37,11 +37,14 @@ class BookController extends Main\Engine\Controller
 		{
 			$this->errorCollection->add($addResult->getErrors());
 		}
+		$bookId = $addResult->getId();
+		return ['ID' => $bookId];
 	}
 
 	public function getByIdAction($id)
 	{
-		return BookTable::getById($id)->fetch();
+		$book = BookTable::getById($id)->fetch();
+		return $book;
 	}
 
 	public function configureActions()

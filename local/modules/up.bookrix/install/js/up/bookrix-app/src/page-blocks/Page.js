@@ -11,27 +11,24 @@ BitrixVue.component('bookrix-page', {
 	},
 	// language=Vue
 	template: `
-      <div class="page-container">
-      <template v-if="componentName === 'main'">
-        <bookrix-booklist :isMainPage="true"/>
-      </template>
-
-      <template v-if="componentName === 'add'">
-        <bookrix-add-book/>
-      </template>
-
-      <template v-if="componentName === 'booklist'">
-        <div class="booklist-container">
-          <bookrix-book-filters/>
-
-          <bookrix-booklist :isMainPage="false"/>
-
-        </div>
-      </template>
-
-      <template v-if="componentName === 'detailed'">
-        <bookrix-book :bookId="bookId" :showDesc="true"/>
-      </template>
-      </div>
+		<div class="page-container">
+			<bookrix-add-book v-if="componentName === 'add'"/>
+			
+			<div class="booklist-container" v-else-if="componentName === 'booklist'">
+				<bookrix-book-filters/>
+				<bookrix-booklist :isMainPage="false"/>
+			</div>
+			
+			<bookrix-book
+				v-else-if="componentName === 'detailed'"
+				:bookId="bookId" 
+				:showDesc="true"
+			/>
+			
+			<bookrix-booklist
+				v-else="componentName === 'main'"
+				:isMainPage="true"
+			/>
+		</div>
 	`,
 });

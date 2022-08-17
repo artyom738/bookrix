@@ -1,6 +1,7 @@
 import { BitrixVue } from 'ui.vue';
 import './Book';
 import './css/Book-List.css';
+import { BooksGetter } from '../lib/get';
 
 BitrixVue.component('bookrix-booklist', {
 	props: ['isMainPage'],
@@ -21,32 +22,11 @@ BitrixVue.component('bookrix-booklist', {
 				'limit': 3,
 				'order': { 'RATING': 'DESC' },
 			}
-			BX.ajax.runAction('up:bookrix.bookcontroller.getBooks', {data: { params: params }})
-				.then(response => {
-					response.data.forEach(function(item) {
-						this.books.push(item);
-					}, this);
-					this.title = 'Список книг';
-				})
-				.catch(response => console.error(response.errors))
+			BooksGetter.getBooks(params).then(response => {
+				this.books = response;
+				this.title = 'Список книг';
+			});
 		},
-
-		getBooks() {
-			this.books = [
-				{
-					"id": 50,
-					"title": "111",
-					"author": "dfdsf",
-					"pages": "200",
-				},
-				{
-					"id": 58,
-					"title": "188",
-					"author": "888",
-					"pages": "57",
-				}
-			]
-		}
 	},
 
 	// language=Vue

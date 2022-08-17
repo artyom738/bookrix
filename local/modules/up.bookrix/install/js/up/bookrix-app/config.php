@@ -9,6 +9,7 @@ return [
 	'js' => 'dist/BookrixApp.bundle.js',
 	'rel' => [
 		'main.core',
+		'bitrix/modules/main/install/js/main/core/events/src/events.js',
 		'ui.vue',
 	],
 	'skip_core' => false,
