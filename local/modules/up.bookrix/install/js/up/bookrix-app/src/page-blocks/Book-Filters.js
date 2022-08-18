@@ -12,7 +12,7 @@ BitrixVue.component('bookrix-book-filters', {
 			pages: {},
 			filters: {
 				title: '',
-				authors: [],
+				authors: {},
 				pages: {
 					min: 0,
 					max: 0,
@@ -38,22 +38,21 @@ BitrixVue.component('bookrix-book-filters', {
 				this.authors = response;
 			})
 		},
-		addAuthor(id)
+		addAuthor(item)
 		{
-			if (BX.util.in_array(id, this.filters.authors))
+			if (BX.util.in_array(item.ID, BX.util.array_keys(this.filters.authors)))
 			{
-				const index = this.filters.authors.indexOf(id);
-				this.filters.authors.splice(index, 1);
+				delete this.filters.authors[item.ID];
 			}
 			else
 			{
-				this.filters.authors.push(id);
+				this.filters.authors[item.ID] = item.NAME;
 			}
-			return id;
+			return item.ID;
 		},
 		reloadFilters()
 		{
-			EventEmitter.emit('Bookrix.refreshBooks').data({params: this.filters});
+			EventEmitter.emit('Bookrix.refreshBooks', {params: this.filters});
 		}
 	},
 	// language=Vue
@@ -72,7 +71,7 @@ BitrixVue.component('bookrix-book-filters', {
 				<div class="bookrix-filter-subtitle">Автор</div>
 				<div class="bookrix-filter-authors">
 					<div class="bookrix-filter-author" v-for="(item, index) in authors">
-						<input type="checkbox" name="book-author" :id="item.ID" @click="addAuthor(item.ID)">
+						<input type="checkbox" name="book-author" :id="item.ID" @click="addAuthor(item)">
 						<label :for="item.ID">{{item.NAME}}</label>
 					</div>
 				</div>

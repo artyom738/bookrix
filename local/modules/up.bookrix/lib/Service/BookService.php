@@ -10,6 +10,7 @@ class BookService
 	public function getBooks(array $params): array
 	{
 		$params = $this->setLimitOffset($params);
+		$params = $this->applyFilters($params);
 
 		$dataParams = [
 			'select' => [
@@ -43,6 +44,39 @@ class BookService
 		}
 
 		return $params;
+	}
+
+	private function applyFilters($params)
+	{
+		$result = [];
+		foreach ($params as $param => $value)
+		{
+			if ($param !== 'filter')
+			{
+				$result[$param] = $value;
+				continue;
+			}
+			foreach ($value as $name => $filter)
+			{
+				if ($name === 'title')
+				{
+					$result['filter']['%=TITLE'] = "%$filter%";
+				}
+				elseif ($name === 'authors')
+				{
+					$result['filter']['@AUTHOR_ID'] = array_keys($filter);
+				}
+				elseif ($name === 'pages')
+				{
+					$result['filter']['><PAGES'] = [(int)$filter['min'], (int)$filter['max']];
+				}
+				elseif ($name === 'rating')
+				{
+					$result['filter']['><RATING'] = [(int)$filter['min'], (int)$filter['max']];
+				}
+			}
+		}
+		return $result;
 	}
 
 	public static function getAuthorByName(string $name): ?int

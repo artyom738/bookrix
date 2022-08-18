@@ -16,22 +16,39 @@ BitrixVue.component('bookrix-booklist', {
 	},
 	created() {
 		this.loadBooks();
+		EventEmitter.subscribe('Bookrix.refreshBooks', (event) => {
+			this.params.filter = event.data.params;
+			this.loadBooks();
+		})
 	},
 	methods: {
 		loadBooks()
 		{
-			EventEmitter.subscribe('Bookrix.refreshBooks', (event) => {
-
-			})
-			let params = {
-				'limit': 3,
-				'order': { 'RATING': 'DESC' },
-			}
-			BooksGetter.getBooks(params).then(response => {
+			this.getParams();
+			BooksGetter.getBooks(this.params).then(response => {
 				this.books = response;
 				this.title = 'Список книг';
+			})
+			.catch(response => {
+				console.error(response.errors);
 			});
 		},
+		getParams()
+		{
+			if (this.isMainPage)
+			{
+				this.params = {
+					'limit': 3,
+					'order': { 'RATING': 'DESC' },
+				};
+			}
+			else if (!this.params)
+			{
+				this.params = {
+					'order': { 'RATING': 'DESC' },
+				};
+			}
+		}
 	},
 
 	// language=Vue

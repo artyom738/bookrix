@@ -197,6 +197,7 @@ footer {
 	    -ms-flex-direction: column;
 	        flex-direction: column;
 	max-width: 1000px;
+	width: 80%;
 	margin: 0 auto;
 }
 
@@ -329,6 +330,7 @@ footer {
 	border-radius: 20px;
 	-webkit-box-shadow: 5px 5px 5px rgba(0,0,0,.3);
 	        box-shadow: 5px 5px 5px rgba(0,0,0,.3);
+	width: 100%;
 }
 
 .book-item-title {
