@@ -264,6 +264,25 @@ footer {
 	    -ms-flex-direction: row;
 	        flex-direction: row;
 	margin: 5px;
+	height: 20px;
+	padding: 5px;
+	cursor: pointer;
+	border-radius: 10px;
+	-webkit-transition: .3s ease;
+	-o-transition: .3s ease;
+	transition: .3s ease;
+}
+
+.bookrix-filter-author:hover {
+	-webkit-box-shadow: 2px 2px 2px rgba(0,0,0,.3);
+	        box-shadow: 2px 2px 2px rgba(0,0,0,.3);
+}
+
+.bookrix-filter-author-selected {
+	border: 1px solid #333;
+	border-radius: 10px;
+	-webkit-box-shadow: 2px 2px 2px rgba(0,0,0,.3);
+	        box-shadow: 2px 2px 2px rgba(0,0,0,.3);
 }
 
 .bookrix-filter-pages {
@@ -346,4 +365,22 @@ footer {
 .book-item-spec {
 	font-size: 20px;
 	margin: 5px 0;
+}
+.bookrix-apllied-filters {
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-orient: vertical;
+	-webkit-box-direction: normal;
+	    -ms-flex-direction: column;
+	        flex-direction: column;
+	margin: 20px;
+	padding: 10px;
+	background-color: #fff;
+	border-radius: 10px;
+}
+
+.bookrix-applied-filter-reset {
+	cursor: pointer;
+	text-decoration: underline;
 }

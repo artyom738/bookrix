@@ -13,23 +13,24 @@ BitrixVue.component('bookrix-book-filters', {
 			filters: {
 				title: '',
 				authors: {},
-				pages: {
-					min: null,
-					max: null,
-				},
-				rating: {
-					min: null,
-					max: null,
-				}
+				pagesMin: null,
+				pagesMax: null,
+				ratingMin: null,
+				ratingMax: null,
 			},
 		};
 	},
 	mounted()
 	{
+		EventEmitter.subscribe('reset-filter', (e) => {
+			this.resetFilter(e.data.item.code);
+		});
+
 		this.getAuthors();
+
 		BooksGetter.getMinMaxPages().then(response => {
-			this.pages.max = response.max;
-		})
+			this.pagesMax = response.max;
+		});
 	},
 	methods: {
 		getAuthors()
@@ -50,14 +51,52 @@ BitrixVue.component('bookrix-book-filters', {
 			}
 			return item.ID;
 		},
+		resetAuthors()
+		{
+		},
+		getAuthorClass(item)
+		{
+			return {
+				'bookrix-filter-author-selected': BX.util.in_array(item.ID, BX.util.array_keys(this.filters.authors)),
+			}
+		},
 		getPagesMax()
 		{
-			return this.pages.max;
+			return this.pagesMax;
+		},
+		resetFilter(code)
+		{
+			switch (code)
+			{
+				case 'title':
+					this.filters.title = '';
+					break;
+				case 'authors':
+					this.filters.authors = {};
+					this.resetAuthors();
+					break;
+				case 'pagesMin':
+					this.filters.pagesMin = null;
+					break;
+				case 'pagesMax':
+					this.filters.pagesMax = null;
+					break;
+				case 'ratingMin':
+					this.filters.ratingMin = null;
+					break;
+				case 'ratingMax':
+					this.filters.ratingMax = null;
+					break;
+			}
+			this.reloadFilters();
 		},
 		reloadFilters()
 		{
 			EventEmitter.emit('Bookrix.refreshBooks', {params: this.filters});
 		}
+	},
+	computed: {
+
 	},
 	// language=Vue
 	template: `
@@ -79,9 +118,14 @@ BitrixVue.component('bookrix-book-filters', {
 			<div class="bookrix-filter">
 				<div class="bookrix-filter-subtitle">јвтор</div>
 				<div class="bookrix-filter-authors">
-					<div class="bookrix-filter-author" v-for="(item, index) in authors">
-						<input type="checkbox" name="book-author" :id="item.ID" @click="addAuthor(item)">
-						<label :for="item.ID">{{item.NAME}}</label>
+					<div
+						class="bookrix-filter-author"
+						:class="getAuthorClass(item)"
+						v-for="item in authors"
+						:id="item.ID"
+						@click="addAuthor(item)"
+					>
+						{{item.NAME}}
 					</div>
 				</div>
 			</div>
@@ -93,20 +137,20 @@ BitrixVue.component('bookrix-book-filters', {
 				<div class="ui-ctl ui-ctl-textbox ui-ctl-w33">
 					
 					<input 
-						type="text" 
+						type="number" 
 						class="ui-ctl-element"
 						:placeholder="0"
-						v-model="filters.pages.min">
+						v-model="filters.pagesMin">
 				</div>
 
 				до 
 				<div class="ui-ctl ui-ctl-textbox ui-ctl-w33">
 					
 					<input 
-						type="text" 
+						type="number" 
 						class="ui-ctl-element"
 						:placeholder="getPagesMax()"
-						v-model="filters.pages.max">
+						v-model="filters.pagesMax">
 				</div>
 			</div>
 
@@ -119,19 +163,19 @@ BitrixVue.component('bookrix-book-filters', {
 				<div class="ui-ctl ui-ctl-textbox ui-ctl-w33">
 					
 					<input 
-						type="text" 
+						type="number" 
 						class="ui-ctl-element" 
 						placeholder="0" 
-						v-model="filters.rating.min">
+						v-model="filters.ratingMin">
 				</div>
 				до
 				<div class="ui-ctl ui-ctl-textbox ui-ctl-w33">
 					
 					<input 
-						type="text" 
+						type="number" 
 						class="ui-ctl-element" 
 						placeholder="100" 
-						v-model="filters.rating.max">
+						v-model="filters.ratingMax">
 				</div>
 			</div>
 		</div>

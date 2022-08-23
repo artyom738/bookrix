@@ -1,0 +1,13 @@
+.bookrix-apllied-filters {
+	display: flex;
+	flex-direction: column;
+	margin: 20px;
+	padding: 10px;
+	background-color: #fff;
+	border-radius: 10px;
+}
+
+.bookrix-applied-filter-reset {
+	cursor: pointer;
+	text-decoration: underline;
+}
