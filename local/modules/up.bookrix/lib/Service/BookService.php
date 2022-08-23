@@ -58,6 +58,11 @@ class BookService
 			}
 			foreach ($value as $name => $filter)
 			{
+				if (!$filter)
+				{
+					continue;
+				}
+
 				if ($name === 'title')
 				{
 					$result['filter']['%=TITLE'] = "%$filter%";
@@ -68,7 +73,19 @@ class BookService
 				}
 				elseif ($name === 'pages')
 				{
-					$result['filter']['><PAGES'] = [(int)$filter['min'], (int)$filter['max']];
+					if ((string)$filter['min'] === '' && (string)$filter['max'] === '')
+					{
+						continue;
+					}
+
+					if ((string)$filter['min'] === '' && (string)$filter['max'] !== '')
+					{
+						$result['filter']['><PAGES'] = [0, (int)$filter['max']];
+					}
+					else
+					{
+						$result['filter']['><PAGES'] = [(int)$filter['min'], (int)$filter['max']];
+					}
 				}
 				elseif ($name === 'rating')
 				{

@@ -14,12 +14,12 @@ BitrixVue.component('bookrix-book-filters', {
 				title: '',
 				authors: {},
 				pages: {
-					min: 0,
-					max: 0,
+					min: null,
+					max: null,
 				},
 				rating: {
-					min: 0,
-					max: 100,
+					min: null,
+					max: null,
 				}
 			},
 		};
@@ -28,7 +28,7 @@ BitrixVue.component('bookrix-book-filters', {
 	{
 		this.getAuthors();
 		BooksGetter.getMinMaxPages().then(response => {
-			this.filters.pages.max = response.max;
+			this.pages.max = response.max;
 		})
 	},
 	methods: {
@@ -50,6 +50,10 @@ BitrixVue.component('bookrix-book-filters', {
 			}
 			return item.ID;
 		},
+		getPagesMax()
+		{
+			return this.pages.max;
+		},
 		reloadFilters()
 		{
 			EventEmitter.emit('Bookrix.refreshBooks', {params: this.filters});
@@ -59,11 +63,16 @@ BitrixVue.component('bookrix-book-filters', {
 	template: `
 		<div class="bookrix-filters">
 			<div class="bookrix-filter-title">Фильтры</div>
-			{{filters}}
 			<div class="bookrix-filter">
 				<div class="bookrix-filter-subtitle">Название книги</div>
 				<div class="ui-ctl ui-ctl-textbox ui-ctl-w100">
-					<input type="text" class="ui-ctl-element" name="book-name" id="book-name" v-model="filters.title">
+					<input 
+						type="text" 
+						class="ui-ctl-element" 
+						name="book-name" 
+						id="book-name" 
+						v-model="filters.title"
+					>
 				</div>
 			</div>
 
@@ -80,12 +89,24 @@ BitrixVue.component('bookrix-book-filters', {
 		<div class="bookrix-filter">
 			<div class="bookrix-filter-subtitle">Страниц</div>
 			<div class="bookrix-filter-pages">
+				от 
 				<div class="ui-ctl ui-ctl-textbox ui-ctl-w33">
-					<input type="text" class="ui-ctl-element" placeholder="от" v-model="filters.pages.min">
+					
+					<input 
+						type="text" 
+						class="ui-ctl-element"
+						:placeholder="0"
+						v-model="filters.pages.min">
 				</div>
 
+				до 
 				<div class="ui-ctl ui-ctl-textbox ui-ctl-w33">
-					<input type="text" class="ui-ctl-element" placeholder="до"  v-model="filters.pages.max">
+					
+					<input 
+						type="text" 
+						class="ui-ctl-element"
+						:placeholder="getPagesMax()"
+						v-model="filters.pages.max">
 				</div>
 			</div>
 
@@ -94,12 +115,23 @@ BitrixVue.component('bookrix-book-filters', {
 		<div class="bookrix-filter">
 			<div class="bookrix-filter-subtitle">Рейтинг</div>
 			<div class="bookrix-filter-pages">
+				от
 				<div class="ui-ctl ui-ctl-textbox ui-ctl-w33">
-					<input type="text" class="ui-ctl-element" placeholder="от" v-model="filters.rating.min">
+					
+					<input 
+						type="text" 
+						class="ui-ctl-element" 
+						placeholder="0" 
+						v-model="filters.rating.min">
 				</div>
-
+				до
 				<div class="ui-ctl ui-ctl-textbox ui-ctl-w33">
-					<input type="text" class="ui-ctl-element" placeholder="до" v-model="filters.rating.max">
+					
+					<input 
+						type="text" 
+						class="ui-ctl-element" 
+						placeholder="100" 
+						v-model="filters.rating.max">
 				</div>
 			</div>
 		</div>

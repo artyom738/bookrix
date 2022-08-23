@@ -202,13 +202,72 @@
 	  template: "\n\t\t<div class=\"book-item\">\n\t\t\t<div class=\"book-item-title\" v-if=\"book.ID\">\n\t\t\t\t<a v-bind:href=\"'/books/' + book.ID\">{{ book.TITLE }}</a>\n\t\t\t</div>\n\t\t\t<div class=\"book-item-title\" v-else>\n\t\t\t\t{{ book.TITLE }}\n\t\t\t</div>\n\n\t\t\t<template v-for=\"(value, index) in book\">\n\t\t\t\t<div class=\"book-item-spec\" v-if=\"(Object.keys(fieldsMap)).includes(index)\">\n\t\t\t\t\t{{ fieldsMap[index] }}: {{value}}\n\t\t\t\t</div>\n\t\t\t\t<div class=\"book-item-spec\" v-else-if=\"index === 'DATE_ADD'\">\n\t\t\t\t\t\u0414\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0430: {{getDate(value)}}\n\t\t\t\t</div>\n\t\t\t\t<div class=\"book-item-spec\" v-else-if=\"index === 'DESCRIPTION' && showDesc\">\n\t\t\t\t\t\u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435: {{value}}\n\t\t\t\t</div>\n\t\t\t</template>\n\t\t</div>\n\t"
 	});
 
+	ui_vue.BitrixVue.component('bookrix-applied-filters', {
+	  props: [],
+	  data: function data() {
+	    return {
+	      filters: {}
+	    };
+	  },
+	  created: function created() {
+	    var _this = this;
+
+	    main_core_events.EventEmitter.subscribe('Bookrix.refreshBooks', function (event) {
+	      _this.filters = _this.prepareFields(event.data.params);
+	    });
+	  },
+	  methods: {
+	    prepareFields: function prepareFields(filters) {
+	      var _ref;
+
+	      var result = {};
+
+	      for (var filterName in filters) {
+	        if (!filters[filterName]) {
+	          continue;
+	        }
+
+	        switch (filterName) {
+	          case 'title':
+	            result['Название: '] = filters.title;
+	            break;
+
+	          case 'authors':
+	            var authors = (_ref = []).concat.apply(_ref, babelHelpers.toConsumableArray(Object.values(filters.authors))).join(', ');
+
+	            if (authors !== '') {
+	              result['Авторы: '] = authors;
+	            }
+
+	            break;
+
+	          case 'pages':
+	            result['Страниц от: '] = filters.pages.min;
+	            result['Страниц до: '] = filters.pages.max;
+	            break;
+
+	          case 'rating':
+	            result['Рейтинг от: '] = filters.rating.min;
+	            result['Рейтинг до: '] = filters.rating.max;
+	            break;
+	        }
+	      }
+
+	      return result;
+	    }
+	  },
+	  // language=Vue
+	  template: "\n\t\t<div class=\"bookrix-apllied-filters\" v-if=\"filters && Object.keys(filters).length !== 0\">\n\t\t<div class=\"bookrix-filter-title\">\u041F\u0440\u0438\u043C\u0435\u043D\u0435\u043D\u043D\u044B\u0435 \u0444\u0438\u043B\u044C\u0442\u0440\u044B:</div>\n\t\t<template v-for=\"(value, key) in filters\">\n\t\t\t<div class=\"bookrix-filter-item\" v-if=\"value\">\n\t\t\t\t{{key}} <b>{{value}}</b>\n\t\t\t</div>\n\t\t</template>\n\t\t</div>\n\t"
+	});
+
 	ui_vue.BitrixVue.component('bookrix-booklist', {
 	  props: ['isMainPage'],
 	  data: function data() {
 	    return {
 	      books: [],
 	      arrayBooks: [],
-	      title: 'Загрузка...'
+	      title: 'Загрузка...',
+	      filters: {}
 	    };
 	  },
 	  created: function created() {
@@ -228,7 +287,12 @@
 	      this.getParams();
 	      BooksGetter.getBooks(this.params).then(function (response) {
 	        _this2.books = response;
-	        _this2.title = 'Список книг';
+
+	        if (response.length === 0) {
+	          _this2.title = 'По вашему запросу ничего не найдено!';
+	        } else {
+	          _this2.title = 'Список книг';
+	        }
 	      })["catch"](function (response) {
 	        console.error(response.errors);
 	      });
@@ -251,7 +315,7 @@
 	    }
 	  },
 	  // language=Vue
-	  template: "\n\t\t<div class=\"book-list\">\n\t\t<div class=\"book-list-title\">\n\t\t  {{title}}\n\t\t</div>\n\t\t<template v-for=\"book in this.books\">\n\t\t  <bookrix-book :book=\"book\" :showDesc=\"!isMainPage\"/>\n\t\t</template>\n\t\t</div>\n\t\t"
+	  template: "\n\t\t<div class=\"book-list\">\n\t\t<bookrix-applied-filters/>\n\t\t<div class=\"book-list-title\">\n\t\t\t{{title}}\n\t\t</div>\n\t\t<bookrix-book v-for=\"book in this.books\" :book=\"book\" :showDesc=\"!isMainPage\"/>\n\t\t</div>\n\t\t"
 	});
 
 	ui_vue.BitrixVue.component('bookrix-book-filters', {
@@ -264,12 +328,12 @@
 	        title: '',
 	        authors: {},
 	        pages: {
-	          min: 0,
-	          max: 0
+	          min: null,
+	          max: null
 	        },
 	        rating: {
-	          min: 0,
-	          max: 100
+	          min: null,
+	          max: null
 	        }
 	      }
 	    };
@@ -279,7 +343,7 @@
 
 	    this.getAuthors();
 	    BooksGetter.getMinMaxPages().then(function (response) {
-	      _this.filters.pages.max = response.max;
+	      _this.pages.max = response.max;
 	    });
 	  },
 	  methods: {
@@ -299,6 +363,9 @@
 
 	      return item.ID;
 	    },
+	    getPagesMax: function getPagesMax() {
+	      return this.pages.max;
+	    },
 	    reloadFilters: function reloadFilters() {
 	      main_core_events.EventEmitter.emit('Bookrix.refreshBooks', {
 	        params: this.filters
@@ -306,7 +373,7 @@
 	    }
 	  },
 	  // language=Vue
-	  template: "\n\t\t<div class=\"bookrix-filters\">\n\t\t\t<div class=\"bookrix-filter-title\">\u0424\u0438\u043B\u044C\u0442\u0440\u044B</div>\n\t\t\t{{filters}}\n\t\t\t<div class=\"bookrix-filter\">\n\t\t\t\t<div class=\"bookrix-filter-subtitle\">\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u043A\u043D\u0438\u0433\u0438</div>\n\t\t\t\t<div class=\"ui-ctl ui-ctl-textbox ui-ctl-w100\">\n\t\t\t\t\t<input type=\"text\" class=\"ui-ctl-element\" name=\"book-name\" id=\"book-name\" v-model=\"filters.title\">\n\t\t\t\t</div>\n\t\t\t</div>\n\n\t\t\t<div class=\"bookrix-filter\">\n\t\t\t\t<div class=\"bookrix-filter-subtitle\">\u0410\u0432\u0442\u043E\u0440</div>\n\t\t\t\t<div class=\"bookrix-filter-authors\">\n\t\t\t\t\t<div class=\"bookrix-filter-author\" v-for=\"(item, index) in authors\">\n\t\t\t\t\t\t<input type=\"checkbox\" name=\"book-author\" :id=\"item.ID\" @click=\"addAuthor(item)\">\n\t\t\t\t\t\t<label :for=\"item.ID\">{{item.NAME}}</label>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t</div>\n\n\t\t<div class=\"bookrix-filter\">\n\t\t\t<div class=\"bookrix-filter-subtitle\">\u0421\u0442\u0440\u0430\u043D\u0438\u0446</div>\n\t\t\t<div class=\"bookrix-filter-pages\">\n\t\t\t\t<div class=\"ui-ctl ui-ctl-textbox ui-ctl-w33\">\n\t\t\t\t\t<input type=\"text\" class=\"ui-ctl-element\" placeholder=\"\u043E\u0442\" v-model=\"filters.pages.min\">\n\t\t\t\t</div>\n\n\t\t\t\t<div class=\"ui-ctl ui-ctl-textbox ui-ctl-w33\">\n\t\t\t\t\t<input type=\"text\" class=\"ui-ctl-element\" placeholder=\"\u0434\u043E\"  v-model=\"filters.pages.max\">\n\t\t\t\t</div>\n\t\t\t</div>\n\n\t\t</div>\n\n\t\t<div class=\"bookrix-filter\">\n\t\t\t<div class=\"bookrix-filter-subtitle\">\u0420\u0435\u0439\u0442\u0438\u043D\u0433</div>\n\t\t\t<div class=\"bookrix-filter-pages\">\n\t\t\t\t<div class=\"ui-ctl ui-ctl-textbox ui-ctl-w33\">\n\t\t\t\t\t<input type=\"text\" class=\"ui-ctl-element\" placeholder=\"\u043E\u0442\" v-model=\"filters.rating.min\">\n\t\t\t\t</div>\n\n\t\t\t\t<div class=\"ui-ctl ui-ctl-textbox ui-ctl-w33\">\n\t\t\t\t\t<input type=\"text\" class=\"ui-ctl-element\" placeholder=\"\u0434\u043E\" v-model=\"filters.rating.max\">\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\t\t<button class=\"ui-btn ui-btn-success\" @click=\"reloadFilters\">\u041D\u0430\u0439\u0442\u0438</button>\n\t\t</div>\n\t"
+	  template: "\n\t\t<div class=\"bookrix-filters\">\n\t\t\t<div class=\"bookrix-filter-title\">\u0424\u0438\u043B\u044C\u0442\u0440\u044B</div>\n\t\t\t<div class=\"bookrix-filter\">\n\t\t\t\t<div class=\"bookrix-filter-subtitle\">\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u043A\u043D\u0438\u0433\u0438</div>\n\t\t\t\t<div class=\"ui-ctl ui-ctl-textbox ui-ctl-w100\">\n\t\t\t\t\t<input \n\t\t\t\t\t\ttype=\"text\" \n\t\t\t\t\t\tclass=\"ui-ctl-element\" \n\t\t\t\t\t\tname=\"book-name\" \n\t\t\t\t\t\tid=\"book-name\" \n\t\t\t\t\t\tv-model=\"filters.title\"\n\t\t\t\t\t>\n\t\t\t\t</div>\n\t\t\t</div>\n\n\t\t\t<div class=\"bookrix-filter\">\n\t\t\t\t<div class=\"bookrix-filter-subtitle\">\u0410\u0432\u0442\u043E\u0440</div>\n\t\t\t\t<div class=\"bookrix-filter-authors\">\n\t\t\t\t\t<div class=\"bookrix-filter-author\" v-for=\"(item, index) in authors\">\n\t\t\t\t\t\t<input type=\"checkbox\" name=\"book-author\" :id=\"item.ID\" @click=\"addAuthor(item)\">\n\t\t\t\t\t\t<label :for=\"item.ID\">{{item.NAME}}</label>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t</div>\n\n\t\t<div class=\"bookrix-filter\">\n\t\t\t<div class=\"bookrix-filter-subtitle\">\u0421\u0442\u0440\u0430\u043D\u0438\u0446</div>\n\t\t\t<div class=\"bookrix-filter-pages\">\n\t\t\t\t\u043E\u0442 \n\t\t\t\t<div class=\"ui-ctl ui-ctl-textbox ui-ctl-w33\">\n\t\t\t\t\t\n\t\t\t\t\t<input \n\t\t\t\t\t\ttype=\"text\" \n\t\t\t\t\t\tclass=\"ui-ctl-element\"\n\t\t\t\t\t\t:placeholder=\"0\"\n\t\t\t\t\t\tv-model=\"filters.pages.min\">\n\t\t\t\t</div>\n\n\t\t\t\t\u0434\u043E \n\t\t\t\t<div class=\"ui-ctl ui-ctl-textbox ui-ctl-w33\">\n\t\t\t\t\t\n\t\t\t\t\t<input \n\t\t\t\t\t\ttype=\"text\" \n\t\t\t\t\t\tclass=\"ui-ctl-element\"\n\t\t\t\t\t\t:placeholder=\"getPagesMax()\"\n\t\t\t\t\t\tv-model=\"filters.pages.max\">\n\t\t\t\t</div>\n\t\t\t</div>\n\n\t\t</div>\n\n\t\t<div class=\"bookrix-filter\">\n\t\t\t<div class=\"bookrix-filter-subtitle\">\u0420\u0435\u0439\u0442\u0438\u043D\u0433</div>\n\t\t\t<div class=\"bookrix-filter-pages\">\n\t\t\t\t\u043E\u0442\n\t\t\t\t<div class=\"ui-ctl ui-ctl-textbox ui-ctl-w33\">\n\t\t\t\t\t\n\t\t\t\t\t<input \n\t\t\t\t\t\ttype=\"text\" \n\t\t\t\t\t\tclass=\"ui-ctl-element\" \n\t\t\t\t\t\tplaceholder=\"0\" \n\t\t\t\t\t\tv-model=\"filters.rating.min\">\n\t\t\t\t</div>\n\t\t\t\t\u0434\u043E\n\t\t\t\t<div class=\"ui-ctl ui-ctl-textbox ui-ctl-w33\">\n\t\t\t\t\t\n\t\t\t\t\t<input \n\t\t\t\t\t\ttype=\"text\" \n\t\t\t\t\t\tclass=\"ui-ctl-element\" \n\t\t\t\t\t\tplaceholder=\"100\" \n\t\t\t\t\t\tv-model=\"filters.rating.max\">\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\t\t<button class=\"ui-btn ui-btn-success\" @click=\"reloadFilters\">\u041D\u0430\u0439\u0442\u0438</button>\n\t\t</div>\n\t"
 	});
 
 	ui_vue.BitrixVue.component('bookrix-add-book', {

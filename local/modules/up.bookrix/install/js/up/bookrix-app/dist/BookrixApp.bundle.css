@@ -274,8 +274,12 @@ footer {
 	-webkit-box-direction: normal;
 	    -ms-flex-direction: row;
 	        flex-direction: row;
-	-ms-flex-pack: distribute;
-	    justify-content: space-around;
+	-webkit-box-align: center;
+	    -ms-flex-align: center;
+	        align-items: center;
+	-webkit-box-pack: justify;
+	    -ms-flex-pack: justify;
+	        justify-content: space-between;
 }
 .add-container {
 	max-width: 1000px;
