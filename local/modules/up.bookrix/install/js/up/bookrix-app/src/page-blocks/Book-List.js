@@ -50,14 +50,21 @@ BitrixVue.component('bookrix-booklist', {
 			{
 				this.params = {
 					'limit': 3,
-					'order': { 'RATING': 'DESC' },
 				};
 			}
 			else if (!this.params)
 			{
 				this.params = {
-					'order': { 'RATING': 'DESC' },
 				};
+			}
+
+			if (this.isMainPage)
+			{
+				this.params['order'] = {'RATING': 'DESC'}
+			}
+			else
+			{
+				this.params['order'] = {'DATE_ADD': 'DESC'}
 			}
 		},
 	},

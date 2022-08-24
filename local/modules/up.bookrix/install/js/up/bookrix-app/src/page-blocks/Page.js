@@ -26,7 +26,7 @@ BitrixVue.component('bookrix-page', {
 			/>
 			
 			<bookrix-booklist
-				v-else="componentName === 'main'"
+				v-else
 				:isMainPage="true"
 			/>
 		</div>

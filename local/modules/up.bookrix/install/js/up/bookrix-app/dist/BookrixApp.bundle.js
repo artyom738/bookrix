@@ -186,6 +186,8 @@
 	  },
 	  methods: {
 	    getDate: function getDate(date) {
+	      console.log(date);
+	      console.log(BX.date.format('d F Y', date));
 	      return BX.date.format('d F Y', date);
 	    },
 	    loadBook: function loadBook() {
@@ -199,7 +201,7 @@
 	    }
 	  },
 	  // language=Vue
-	  template: "\n\t\t<div class=\"book-item\">\n\t\t\t<div class=\"book-item-title\" v-if=\"book.ID\">\n\t\t\t\t<a v-bind:href=\"'/books/' + book.ID\">{{ book.TITLE }}</a>\n\t\t\t</div>\n\t\t\t<div class=\"book-item-title\" v-else>\n\t\t\t\t{{ book.TITLE }}\n\t\t\t</div>\n\n\t\t\t<template v-for=\"(value, index) in book\">\n\t\t\t\t<div class=\"book-item-spec\" v-if=\"(Object.keys(fieldsMap)).includes(index)\">\n\t\t\t\t\t{{ fieldsMap[index] }}: {{value}}\n\t\t\t\t</div>\n\t\t\t\t<div class=\"book-item-spec\" v-else-if=\"index === 'DATE_ADD'\">\n\t\t\t\t\t\u0414\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0430: {{getDate(value)}}\n\t\t\t\t</div>\n\t\t\t\t<div class=\"book-item-spec\" v-else-if=\"index === 'DESCRIPTION' && showDesc\">\n\t\t\t\t\t\u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435: {{value}}\n\t\t\t\t</div>\n\t\t\t</template>\n\t\t</div>\n\t"
+	  template: "\n\t\t<div class=\"book-item\">\n\t\t\t<div class=\"book-item-title\" v-if=\"book.ID\">\n\t\t\t\t<a v-bind:href=\"'/books/' + book.ID\">{{ book.TITLE }}</a>\n\t\t\t</div>\n\t\t\t<div class=\"book-item-title\" v-else>\n\t\t\t\t{{ book.TITLE }}\n\t\t\t</div>\n\n\t\t\t<template v-for=\"(value, index) in book\">\n\t\t\t\t<div class=\"book-item-spec\" v-if=\"(Object.keys(fieldsMap)).includes(index)\">\n\t\t\t\t\t{{ fieldsMap[index] }}: {{value}}\n\t\t\t\t</div>\n\t\t\t\t<div class=\"book-item-spec\" v-else-if=\"index === 'DATE_ADD'\">\n\t\t\t\t\t\u0414\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0430: {{value}}\n\t\t\t\t</div>\n\t\t\t\t<div class=\"book-item-spec\" v-else-if=\"index === 'DESCRIPTION' && showDesc\">\n\t\t\t\t\t\u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435: {{value}}\n\t\t\t\t</div>\n\t\t\t</template>\n\t\t</div>\n\t"
 	});
 
 	ui_vue.BitrixVue.component('bookrix-applied-filters', {
@@ -346,16 +348,19 @@
 	    getParams: function getParams() {
 	      if (this.isMainPage) {
 	        this.params = {
-	          'limit': 3,
-	          'order': {
-	            'RATING': 'DESC'
-	          }
+	          'limit': 3
 	        };
 	      } else if (!this.params) {
-	        this.params = {
-	          'order': {
-	            'RATING': 'DESC'
-	          }
+	        this.params = {};
+	      }
+
+	      if (this.isMainPage) {
+	        this.params['order'] = {
+	          'RATING': 'DESC'
+	        };
+	      } else {
+	        this.params['order'] = {
+	          'DATE_ADD': 'DESC'
 	        };
 	      }
 	    }
@@ -535,7 +540,7 @@
 	  props: ['componentName', 'bookId'],
 	  computed: {},
 	  // language=Vue
-	  template: "\n\t\t<div class=\"page-container\">\n\t\t\t<bookrix-add-book v-if=\"componentName === 'add'\"/>\n\t\t\t\n\t\t\t<div class=\"booklist-container\" v-else-if=\"componentName === 'booklist'\">\n\t\t\t\t<bookrix-book-filters/>\n\t\t\t\t<bookrix-booklist :isMainPage=\"false\"/>\n\t\t\t</div>\n\t\t\t\n\t\t\t<bookrix-book\n\t\t\t\tv-else-if=\"componentName === 'detailed'\"\n\t\t\t\t:bookId=\"bookId\" \n\t\t\t\t:showDesc=\"true\"\n\t\t\t/>\n\t\t\t\n\t\t\t<bookrix-booklist\n\t\t\t\tv-else=\"componentName === 'main'\"\n\t\t\t\t:isMainPage=\"true\"\n\t\t\t/>\n\t\t</div>\n\t"
+	  template: "\n\t\t<div class=\"page-container\">\n\t\t\t<bookrix-add-book v-if=\"componentName === 'add'\"/>\n\t\t\t\n\t\t\t<div class=\"booklist-container\" v-else-if=\"componentName === 'booklist'\">\n\t\t\t\t<bookrix-book-filters/>\n\t\t\t\t<bookrix-booklist :isMainPage=\"false\"/>\n\t\t\t</div>\n\t\t\t\n\t\t\t<bookrix-book\n\t\t\t\tv-else-if=\"componentName === 'detailed'\"\n\t\t\t\t:bookId=\"bookId\" \n\t\t\t\t:showDesc=\"true\"\n\t\t\t/>\n\t\t\t\n\t\t\t<bookrix-booklist\n\t\t\t\tv-else\n\t\t\t\t:isMainPage=\"true\"\n\t\t\t/>\n\t\t</div>\n\t"
 	});
 
 	var BookrixApp = /*#__PURE__*/function () {

@@ -2,6 +2,7 @@
 
 namespace Up\Bookrix\Service;
 
+use Bitrix\Main\Type\Date;
 use Up\Bookrix\ORM\AuthorTable;
 use Up\Bookrix\ORM\BookTable;
 
@@ -26,9 +27,8 @@ class BookService
 
 		$dataParams = array_merge($dataParams, $params);
 
-		$result = BookTable::getList($dataParams);
-
-		return $result->fetchAll();
+		$books = BookTable::getList($dataParams)->fetchAll();
+		return $books;
 	}
 
 	private function setLimitOffset(array $params)

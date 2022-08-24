@@ -21,6 +21,8 @@ BitrixVue.component('bookrix-book', {
 	methods: {
 		getDate(date)
 		{
+			console.log(date);
+			console.log(BX.date.format('d F Y', date));
 			return BX.date.format('d F Y', date);
 		},
 		loadBook()
@@ -48,7 +50,7 @@ BitrixVue.component('bookrix-book', {
 					{{ fieldsMap[index] }}: {{value}}
 				</div>
 				<div class="book-item-spec" v-else-if="index === 'DATE_ADD'">
-					Добавлена: {{getDate(value)}}
+					Добавлена: {{value}}
 				</div>
 				<div class="book-item-spec" v-else-if="index === 'DESCRIPTION' && showDesc">
 					Описание: {{value}}

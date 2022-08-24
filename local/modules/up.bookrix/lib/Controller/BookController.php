@@ -13,6 +13,10 @@ class BookController extends Main\Engine\Controller
 	{
 		$service = new BookService();
 		$books = $service->getBooks($params);
+		foreach ($books as $i => $book)
+		{
+			$books[$i]['DATE_ADD'] = $this->prepateDates($book);
+		}
 		return $books;
 	}
 
@@ -44,7 +48,13 @@ class BookController extends Main\Engine\Controller
 	public function getByIdAction($id)
 	{
 		$book = BookTable::getById($id)->fetch();
+		$book['DATE_ADD'] = $this->prepateDates($book);
 		return $book;
+	}
+
+	private function prepateDates(array $book)
+	{
+		return FormatDate('d F Y', MakeTimeStamp($book['DATE_ADD']));
 	}
 
 	public function configureActions()
