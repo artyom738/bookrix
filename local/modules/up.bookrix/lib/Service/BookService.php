@@ -71,13 +71,21 @@ class BookService
 				{
 					$result['filter']['@AUTHOR_ID'] = array_keys($filter);
 				}
-				elseif ($name === 'pagesMin' || $name === 'pagesMax')
+				elseif ($name === 'pagesMin')
 				{
-					$result['filter']['><PAGES'] = [(int)$value['pagesMin'], (int)$value['pagesMax']];
+					$result['filter']['>PAGES'] = (int)$value['pagesMin'];
 				}
-				elseif ($name === 'ratingMin' || $name === 'ratingMax')
+				elseif ($name === 'pagesMax')
 				{
-					$result['filter']['><RATING'] = [(int)$value['ratingMin'], (int)$value['ratingMax']];
+					$result['filter']['<PAGES'] = (int)$value['pagesMax'];
+				}
+				elseif ($name === 'ratingMin')
+				{
+					$result['filter']['>RATING'] = (int)$value['ratingMin'];
+				}
+				elseif ($name === 'ratingMax')
+				{
+					$result['filter']['<RATING'] = (int)$value['ratingMax'];
 				}
 			}
 		}

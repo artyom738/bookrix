@@ -292,6 +292,11 @@
 	        item: this.filters[key]
 	      });
 	    },
+	    resetAllFilters: function resetAllFilters(filters) {
+	      for (var object in filters) {
+	        this.resetFilter(object);
+	      }
+	    },
 	    isEmptyFilters: function isEmptyFilters() {
 	      if (!this.filters || Object.keys(this.filters).length === 0) {
 	        return true;
@@ -305,7 +310,7 @@
 	    }
 	  },
 	  // language=Vue
-	  template: "\n\t\t<div class=\"bookrix-apllied-filters\" v-if=\"!isEmptyFilters()\">\n\t\t<div class=\"bookrix-filter-title\">\u041F\u0440\u0438\u043C\u0435\u043D\u0435\u043D\u043D\u044B\u0435 \u0444\u0438\u043B\u044C\u0442\u0440\u044B:</div>\n\t\t<template v-for=\"(object, filterName) in filters\">\n\t\t\t<div class=\"bookrix-filter-item\" v-if=\"object.value\">\n\t\t\t\t{{object.name}}: <b>{{object.value}}</b>\n\t\t\t\t<a \n\t\t\t\t\tclass=\"bookrix-applied-filter-reset\"\n\t\t\t\t\t@click=\"resetFilter(object.code)\"\n\t\t\t\t>(x)</a>\n\t\t\t</div>\n\t\t</template>\n\t\t</div>\n\t"
+	  template: "\n\t\t<div class=\"bookrix-apllied-filters\" v-if=\"!isEmptyFilters()\">\n\t\t<div class=\"bookrix-filter-title\">\u041F\u0440\u0438\u043C\u0435\u043D\u0435\u043D\u043D\u044B\u0435 \u0444\u0438\u043B\u044C\u0442\u0440\u044B:</div>\n\t\t\n\t\t<div class=\"bookrix-filter-item\">\u0412\u0441\u0435\u0433\u043E \u0444\u0438\u043B\u044C\u0442\u0440\u043E\u0432: {{ Object.keys(filters).length }}</div>\n\t\t<a\n\t\t\tclass=\"bookrix-applied-filter-reset\"\n\t\t\t@click=\"resetAllFilters(filters)\"\n\t\t>(\u0441\u0431\u0440\u043E\u0441\u0438\u0442\u044C \u0432\u0441\u0435)</a><br>\n\t\t\n\t\t<template v-for=\"(object, filterName) in filters\">\n\t\t\t<div class=\"bookrix-filter-item\" v-if=\"object.value\">\n\t\t\t\t{{object.name}}: <b>{{object.value}}</b>\n\t\t\t\t<a \n\t\t\t\t\tclass=\"bookrix-applied-filter-reset\"\n\t\t\t\t\t@click=\"resetFilter(object.code)\"\n\t\t\t\t>(x)</a>\n\t\t\t</div>\n\t\t</template>\n\t\t</div>\n\t"
 	});
 
 	ui_vue.BitrixVue.component('bookrix-booklist', {

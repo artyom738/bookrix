@@ -83,6 +83,13 @@ BitrixVue.component('bookrix-applied-filters', {
 		{
 			EventEmitter.emit('reset-filter', {item: this.filters[key]})
 		},
+		resetAllFilters(filters)
+		{
+			for (const object in filters)
+			{
+				this.resetFilter(object);
+			}
+		},
 		isEmptyFilters()
 		{
 			if (!this.filters || Object.keys(this.filters).length === 0)
@@ -107,6 +114,13 @@ BitrixVue.component('bookrix-applied-filters', {
 	template: `
 		<div class="bookrix-apllied-filters" v-if="!isEmptyFilters()">
 		<div class="bookrix-filter-title">Примененные фильтры:</div>
+		
+		<div class="bookrix-filter-item">Всего фильтров: {{ Object.keys(filters).length }}</div>
+		<a
+			class="bookrix-applied-filter-reset"
+			@click="resetAllFilters(filters)"
+		>(сбросить все)</a><br>
+		
 		<template v-for="(object, filterName) in filters">
 			<div class="bookrix-filter-item" v-if="object.value">
 				{{object.name}}: <b>{{object.value}}</b>
