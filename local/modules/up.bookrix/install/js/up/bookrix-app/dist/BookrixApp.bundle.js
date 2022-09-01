@@ -3,13 +3,13 @@
 
 	var menuItems = [{
 	  'link': '/',
-	  'title': 'РќР° РіР»Р°РІРЅСѓСЋ'
+	  'title': 'На главную'
 	}, {
 	  'link': '/booklist',
-	  'title': 'РЎРїРёСЃРѕРє РєРЅРёРі'
+	  'title': 'Список книг'
 	}, {
 	  'link': '/add',
-	  'title': 'Р”РѕР±Р°РІРёС‚СЊ РєРЅРёРіСѓ'
+	  'title': 'Добавить книгу'
 	}];
 
 	ui_vue.BitrixVue.component('bookrix-menu', {
@@ -62,40 +62,40 @@
 	      switch (componentName) {
 	        case 'main':
 	          this.items.push({
-	            'text': 'Р“Р»Р°РІРЅР°СЏ',
+	            'text': 'Главная',
 	            'link': '/'
 	          });
 	          break;
 
 	        case 'add':
 	          this.items.push({
-	            'text': 'Р“Р»Р°РІРЅР°СЏ',
+	            'text': 'Главная',
 	            'link': '/'
 	          });
 	          this.items.push({
-	            'text': 'Р”РѕР±Р°РІРёС‚СЊ РєРЅРёРіСѓ',
+	            'text': 'Добавить книгу',
 	            'link': '/add'
 	          });
 	          break;
 
 	        case 'booklist':
 	          this.items.push({
-	            'text': 'Р“Р»Р°РІРЅР°СЏ',
+	            'text': 'Главная',
 	            'link': '/'
 	          });
 	          this.items.push({
-	            'text': 'РЎРїРёСЃРѕРє РєРЅРёРі',
+	            'text': 'Список книг',
 	            'link': '/booklist'
 	          });
 	          break;
 
 	        case 'detailed':
 	          this.items.push({
-	            'text': 'Р“Р»Р°РІРЅР°СЏ',
+	            'text': 'Главная',
 	            'link': '/'
 	          });
 	          this.items.push({
-	            'text': 'РЎРїРёСЃРѕРє РєРЅРёРі',
+	            'text': 'Список книг',
 	            'link': '/booklist'
 	          });
 	          this.getBookName().then(function (response) {
@@ -175,9 +175,9 @@
 	  data: function data() {
 	    return {
 	      fieldsMap: {
-	        'AUTHORNAME': 'РђРІС‚РѕСЂ',
-	        'RATING': 'Р РµР№С‚РёРЅРі',
-	        'PAGES': 'РЎС‚СЂР°РЅРёС†'
+	        'AUTHORNAME': 'Автор',
+	        'RATING': 'Рейтинг',
+	        'PAGES': 'Страниц'
 	      }
 	    };
 	  },
@@ -234,7 +234,7 @@
 	            result.title = {
 	              'value': filters.title,
 	              'code': 'title',
-	              'name': 'РќР°Р·РІР°РЅРёРµ'
+	              'name': 'Название'
 	            };
 	            break;
 
@@ -245,7 +245,7 @@
 	              result.authors = {
 	                'value': authors,
 	                'code': 'authors',
-	                'name': 'РђРІС‚РѕСЂС‹'
+	                'name': 'Авторы'
 	              };
 	            }
 
@@ -255,7 +255,7 @@
 	            result.pagesMin = {
 	              'value': filters.pagesMin,
 	              'code': 'pagesMin',
-	              'name': 'РЎС‚СЂР°РЅРёС† РѕС‚'
+	              'name': 'Страниц от'
 	            };
 	            break;
 
@@ -263,7 +263,7 @@
 	            result.pagesMax = {
 	              'value': filters.pagesMax,
 	              'code': 'pagesMax',
-	              'name': 'РЎС‚СЂР°РЅРёС† РґРѕ'
+	              'name': 'Страниц до'
 	            };
 	            break;
 
@@ -271,7 +271,7 @@
 	            result.ratingMin = {
 	              'value': filters.ratingMin,
 	              'code': 'ratingMin',
-	              'name': 'Р РµР№С‚РёРЅРі РѕС‚'
+	              'name': 'Рейтинг от'
 	            };
 	            break;
 
@@ -279,7 +279,7 @@
 	            result.ratingmax = {
 	              'value': filters.ratingMax,
 	              'code': 'ratingMax',
-	              'name': 'Р РµР№С‚РёРЅРі РґРѕ'
+	              'name': 'Рейтинг до'
 	            };
 	            break;
 	        }
@@ -314,7 +314,7 @@
 	    return {
 	      books: [],
 	      arrayBooks: [],
-	      title: 'Р—Р°РіСЂСѓР·РєР°...',
+	      title: 'Загрузка...',
 	      filters: {}
 	    };
 	  },
@@ -337,9 +337,9 @@
 	        _this2.books = response;
 
 	        if (response.length === 0) {
-	          _this2.title = 'РџРѕ РІР°С€РµРјСѓ Р·Р°РїСЂРѕСЃСѓ РЅРёС‡РµРіРѕ РЅРµ РЅР°Р№РґРµРЅРѕ!';
+	          _this2.title = 'По вашему запросу ничего не найдено!';
 	        } else {
-	          _this2.title = 'РЎРїРёСЃРѕРє РєРЅРёРі';
+	          _this2.title = 'Список книг';
 	        }
 	      })["catch"](function (response) {
 	        console.error(response.errors);
@@ -484,7 +484,7 @@
 	        if (!BX.type.isNotEmptyString(this[fields[index]])) {
 	          this.failed[fields[index]] = {
 	            name: fields[index],
-	            errorMessage: 'Р’СЃРµ РїРѕР»СЏ РѕР±СЏР·Р°С‚РµР»СЊРЅС‹ Рє Р·Р°РїРѕР»РЅРµРЅРёСЋ!',
+	            errorMessage: 'Все поля обязательны к заполнению!',
 	            "class": 'ui-ctl-danger'
 	          };
 	        }
@@ -497,7 +497,7 @@
 	      if (!this.rating.match('^\\d{1,2}$|100')) {
 	        this.failed.rating = {
 	          name: fields.rating,
-	          errorMessage: 'РџРѕР»Рµ "Р РµР№С‚РёРЅРі" РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ С‡РёСЃР»РѕРј РґРѕ 100',
+	          errorMessage: 'Поле "Рейтинг" должно быть числом до 100',
 	          "class": 'ui-ctl-danger'
 	        };
 	        return;
@@ -506,7 +506,7 @@
 	      if (!this.pages.match('^\\d*$')) {
 	        this.failed.pages = {
 	          name: fields.pages,
-	          errorMessage: 'РџРѕР»Рµ "РЎС‚СЂР°РЅРёС†С‹" РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ С‡РёСЃР»РѕРј',
+	          errorMessage: 'Поле "Страницы" должно быть числом',
 	          "class": 'ui-ctl-danger'
 	        };
 	      }
@@ -537,13 +537,13 @@
 	        }
 	      }).then(function (response) {
 	        BX.UI.Notification.Center.notify({
-	          content: "РљРЅРёРіР° СЃРѕС…СЂР°РЅРµРЅР°!"
+	          content: "Книга сохранена!"
 	        });
 	        _this.bookId = response.data['ID'];
 	        window.location = '/books/' + _this.bookId;
 	      })["catch"](function (response) {
 	        BX.UI.Notification.Center.notify({
-	          content: "РћС€РёР±РєР° СЃРѕС…СЂР°РЅРµРЅРёСЏ РєРЅРёРіРё!"
+	          content: "Ошибка сохранения книги!"
 	        });
 	      });
 	      this.title = '';
