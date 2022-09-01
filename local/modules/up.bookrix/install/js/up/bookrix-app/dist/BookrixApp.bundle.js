@@ -3,13 +3,13 @@
 
 	var menuItems = [{
 	  'link': '/',
-	  'title': 'На главную'
+	  'title': 'РќР° РіР»Р°РІРЅСѓСЋ'
 	}, {
 	  'link': '/booklist',
-	  'title': 'Список книг'
+	  'title': 'РЎРїРёСЃРѕРє РєРЅРёРі'
 	}, {
 	  'link': '/add',
-	  'title': 'Добавить книгу'
+	  'title': 'Р”РѕР±Р°РІРёС‚СЊ РєРЅРёРіСѓ'
 	}];
 
 	ui_vue.BitrixVue.component('bookrix-menu', {
@@ -62,40 +62,40 @@
 	      switch (componentName) {
 	        case 'main':
 	          this.items.push({
-	            'text': 'Главная',
+	            'text': 'Р“Р»Р°РІРЅР°СЏ',
 	            'link': '/'
 	          });
 	          break;
 
 	        case 'add':
 	          this.items.push({
-	            'text': 'Главная',
+	            'text': 'Р“Р»Р°РІРЅР°СЏ',
 	            'link': '/'
 	          });
 	          this.items.push({
-	            'text': 'Добавить книгу',
+	            'text': 'Р”РѕР±Р°РІРёС‚СЊ РєРЅРёРіСѓ',
 	            'link': '/add'
 	          });
 	          break;
 
 	        case 'booklist':
 	          this.items.push({
-	            'text': 'Главная',
+	            'text': 'Р“Р»Р°РІРЅР°СЏ',
 	            'link': '/'
 	          });
 	          this.items.push({
-	            'text': 'Список книг',
+	            'text': 'РЎРїРёСЃРѕРє РєРЅРёРі',
 	            'link': '/booklist'
 	          });
 	          break;
 
 	        case 'detailed':
 	          this.items.push({
-	            'text': 'Главная',
+	            'text': 'Р“Р»Р°РІРЅР°СЏ',
 	            'link': '/'
 	          });
 	          this.items.push({
-	            'text': 'Список книг',
+	            'text': 'РЎРїРёСЃРѕРє РєРЅРёРі',
 	            'link': '/booklist'
 	          });
 	          this.getBookName().then(function (response) {
@@ -175,9 +175,9 @@
 	  data: function data() {
 	    return {
 	      fieldsMap: {
-	        'AUTHORNAME': 'Автор',
-	        'RATING': 'Рейтинг',
-	        'PAGES': 'Страниц'
+	        'AUTHORNAME': 'РђРІС‚РѕСЂ',
+	        'RATING': 'Р РµР№С‚РёРЅРі',
+	        'PAGES': 'РЎС‚СЂР°РЅРёС†'
 	      }
 	    };
 	  },
@@ -234,7 +234,7 @@
 	            result.title = {
 	              'value': filters.title,
 	              'code': 'title',
-	              'name': 'Название'
+	              'name': 'РќР°Р·РІР°РЅРёРµ'
 	            };
 	            break;
 
@@ -245,7 +245,7 @@
 	              result.authors = {
 	                'value': authors,
 	                'code': 'authors',
-	                'name': 'Авторы'
+	                'name': 'РђРІС‚РѕСЂС‹'
 	              };
 	            }
 
@@ -255,7 +255,7 @@
 	            result.pagesMin = {
 	              'value': filters.pagesMin,
 	              'code': 'pagesMin',
-	              'name': 'Страниц от'
+	              'name': 'РЎС‚СЂР°РЅРёС† РѕС‚'
 	            };
 	            break;
 
@@ -263,7 +263,7 @@
 	            result.pagesMax = {
 	              'value': filters.pagesMax,
 	              'code': 'pagesMax',
-	              'name': 'Страниц до'
+	              'name': 'РЎС‚СЂР°РЅРёС† РґРѕ'
 	            };
 	            break;
 
@@ -271,7 +271,7 @@
 	            result.ratingMin = {
 	              'value': filters.ratingMin,
 	              'code': 'ratingMin',
-	              'name': 'Рейтинг от'
+	              'name': 'Р РµР№С‚РёРЅРі РѕС‚'
 	            };
 	            break;
 
@@ -279,7 +279,7 @@
 	            result.ratingmax = {
 	              'value': filters.ratingMax,
 	              'code': 'ratingMax',
-	              'name': 'Рейтинг до'
+	              'name': 'Р РµР№С‚РёРЅРі РґРѕ'
 	            };
 	            break;
 	        }
@@ -314,7 +314,7 @@
 	    return {
 	      books: [],
 	      arrayBooks: [],
-	      title: 'Загрузка...',
+	      title: 'Р—Р°РіСЂСѓР·РєР°...',
 	      filters: {}
 	    };
 	  },
@@ -337,9 +337,9 @@
 	        _this2.books = response;
 
 	        if (response.length === 0) {
-	          _this2.title = 'По вашему запросу ничего не найдено!';
+	          _this2.title = 'РџРѕ РІР°С€РµРјСѓ Р·Р°РїСЂРѕСЃСѓ РЅРёС‡РµРіРѕ РЅРµ РЅР°Р№РґРµРЅРѕ!';
 	        } else {
-	          _this2.title = 'Список книг';
+	          _this2.title = 'РЎРїРёСЃРѕРє РєРЅРёРі';
 	        }
 	      })["catch"](function (response) {
 	        console.error(response.errors);
@@ -471,33 +471,55 @@
 	      rating: '',
 	      pages: '',
 	      description: '',
-	      errorMessage: ''
+	      errorMessage: '',
+	      failed: {}
 	    };
 	  },
 	  methods: {
 	    checkFields: function checkFields() {
-	      if (!BX.type.isNotEmptyString(this.rating) || !BX.type.isNotEmptyString(this.author) || !BX.type.isNotEmptyString(this.pages) || !BX.type.isNotEmptyString(this.description) || !BX.type.isNotEmptyString(this.title)) {
-	        return 'Все поля обязательны к заполнению!';
+	      this.failed = {};
+	      var fields = ['rating', 'author', 'pages', 'description', 'title'];
+
+	      for (var index in fields) {
+	        if (!BX.type.isNotEmptyString(this[fields[index]])) {
+	          this.failed[fields[index]] = {
+	            name: fields[index],
+	            errorMessage: 'Р’СЃРµ РїРѕР»СЏ РѕР±СЏР·Р°С‚РµР»СЊРЅС‹ Рє Р·Р°РїРѕР»РЅРµРЅРёСЋ!',
+	            "class": 'ui-ctl-danger'
+	          };
+	        }
+	      }
+
+	      if (Object.keys(this.failed).length !== 0) {
+	        return;
 	      }
 
 	      if (!this.rating.match('^\\d{1,2}$|100')) {
-	        return 'Поле "Рейтинг" должно быть числом до 100';
+	        this.failed.rating = {
+	          name: fields.rating,
+	          errorMessage: 'РџРѕР»Рµ "Р РµР№С‚РёРЅРі" РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ С‡РёСЃР»РѕРј РґРѕ 100',
+	          "class": 'ui-ctl-danger'
+	        };
+	        return;
 	      }
 
 	      if (!this.pages.match('^\\d*$')) {
-	        return 'Поле "Страницы" должно быть числом';
+	        this.failed.pages = {
+	          name: fields.pages,
+	          errorMessage: 'РџРѕР»Рµ "РЎС‚СЂР°РЅРёС†С‹" РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ С‡РёСЃР»РѕРј',
+	          "class": 'ui-ctl-danger'
+	        };
 	      }
-
-	      return '';
 	    },
 	    save: function save() {
 	      var _this = this;
 
-	      var checkResult = this.checkFields();
+	      this.checkFields();
+	      console.log(this.failed);
 
-	      if (checkResult !== '') {
+	      if (Object.keys(this.failed).length !== 0) {
 	        BX.UI.Notification.Center.notify({
-	          content: checkResult
+	          content: this.failed[Object.keys(this.failed)[0]].errorMessage
 	        });
 	        return;
 	      }
@@ -515,13 +537,13 @@
 	        }
 	      }).then(function (response) {
 	        BX.UI.Notification.Center.notify({
-	          content: "Книга сохранена!"
+	          content: "РљРЅРёРіР° СЃРѕС…СЂР°РЅРµРЅР°!"
 	        });
 	        _this.bookId = response.data['ID'];
 	        window.location = '/books/' + _this.bookId;
 	      })["catch"](function (response) {
 	        BX.UI.Notification.Center.notify({
-	          content: "Ошибка сохранения книги!"
+	          content: "РћС€РёР±РєР° СЃРѕС…СЂР°РЅРµРЅРёСЏ РєРЅРёРіРё!"
 	        });
 	      });
 	      this.title = '';
@@ -529,11 +551,14 @@
 	      this.rating = '';
 	      this.pages = '';
 	      this.description = '';
+	    },
+	    getFailedClass: function getFailedClass(name) {
+	      var result = BX.util.in_array(name, Object.keys(this.failed));
+	      return result ? 'ui-ctl-danger' : '';
 	    }
 	  },
-	  computed: {},
 	  // language=Vue
-	  template: "\n      <div class=\"add-container\">\n\t  <div class=\"add-book-title\">\n\t\t\u0414\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u043A\u043D\u0438\u0433\u0438\n\t  </div>\n      <div class=\"add-book\">\n        <template>\n          <div class=\"ui-ctl ui-ctl-textbox ui-ctl-w75\">\n            <input type=\"text\" class=\"ui-ctl-element\" v-model=\"title\" placeholder=\"\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435\">\n          </div>\n        </template>\n\n        <template>\n          <div class=\"ui-ctl ui-ctl-textbox ui-ctl-w75\">\n            <input type=\"text\" class=\"ui-ctl-element\" v-model=\"author\" placeholder=\"\u0410\u0432\u0442\u043E\u0440\">\n          </div>\n        </template>\n\n        <template>\n          <div class=\"ui-ctl ui-ctl-textbox ui-ctl-w75\">\n            <input type=\"text\" class=\"ui-ctl-element\" v-model=\"rating\" placeholder=\"\u0420\u0435\u0439\u0442\u0438\u043D\u0433\">\n          </div>\n        </template>\n\n        <template>\n          <div class=\"ui-ctl ui-ctl-textbox ui-ctl-w75\">\n            <input type=\"text\" class=\"ui-ctl-element\" v-model=\"pages\" placeholder=\"\u0421\u0442\u0440\u0430\u043D\u0438\u0446\">\n          </div>\n        </template>\n\n        <template>\n          <div class=\"ui-ctl ui-ctl-textarea\">\n            <textarea class=\"ui-ctl-element\" v-model=\"description\" placeholder=\"\u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435\"></textarea>\n          </div>\n        </template>\n        <br>\n        <button class=\"ui-btn ui-btn-icon-add ui-btn-success\" v-on:click=\"save()\">\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C</button>\n      </div>\n\n      <bookrix-book :book=\"{\n          'TITLE': title, \n          'AUTHORNAME': author, \n          'RATING': rating, \n          'PAGES': pages,\n          'DESCRIPTION': description\n      }\" :showDesc=\"true\"/>\n      </div>\n\t"
+	  template: "\n      <div class=\"add-container\">\n\t  <div class=\"add-book-title\">\n\t\t\u0414\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u043A\u043D\u0438\u0433\u0438\n\t  </div>\n      <div class=\"add-book\">\n        <template>\n          <div class=\"ui-ctl ui-ctl-textbox ui-ctl-w75\" :class=\"getFailedClass('title')\">\n            <input type=\"text\" class=\"ui-ctl-element\" v-model=\"title\" placeholder=\"\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435\">\n          </div>\n        </template>\n\n        <template>\n          <div class=\"ui-ctl ui-ctl-textbox ui-ctl-w75\" :class=\"getFailedClass('author')\">\n            <input type=\"text\" class=\"ui-ctl-element\" v-model=\"author\" placeholder=\"\u0410\u0432\u0442\u043E\u0440\">\n          </div>\n        </template>\n\n        <template>\n          <div class=\"ui-ctl ui-ctl-textbox ui-ctl-w75\" :class=\"getFailedClass('rating')\">\n            <input type=\"text\" class=\"ui-ctl-element\" v-model=\"rating\" placeholder=\"\u0420\u0435\u0439\u0442\u0438\u043D\u0433\">\n          </div>\n        </template>\n\n        <template>\n          <div class=\"ui-ctl ui-ctl-textbox ui-ctl-w75\" :class=\"getFailedClass('pages')\">\n            <input type=\"text\" class=\"ui-ctl-element\" v-model=\"pages\" placeholder=\"\u0421\u0442\u0440\u0430\u043D\u0438\u0446\">\n          </div>\n        </template>\n\n        <template>\n          <div class=\"ui-ctl ui-ctl-textarea\" :class=\"getFailedClass('description')\">\n            <textarea class=\"ui-ctl-element\" v-model=\"description\" placeholder=\"\u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435\"></textarea>\n          </div>\n        </template>\n        <br>\n        <button class=\"ui-btn ui-btn-icon-add ui-btn-success\" @click=\"save()\">\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C</button>\n      </div>\n\n      <bookrix-book :book=\"{\n          'TITLE': title, \n          'AUTHORNAME': author, \n          'RATING': rating, \n          'PAGES': pages,\n          'DESCRIPTION': description\n      }\" :showDesc=\"true\"/>\n      </div>\n\t"
 	});
 
 	ui_vue.BitrixVue.component('bookrix-page', {

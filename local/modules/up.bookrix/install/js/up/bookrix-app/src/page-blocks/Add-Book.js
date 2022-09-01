@@ -12,36 +12,43 @@ BitrixVue.component('bookrix-add-book', {
 			pages: '',
 			description: '',
 			errorMessage: '',
+			failed: {},
 		};
 	},
 	methods: {
 		checkFields()
 		{
-			if (!BX.type.isNotEmptyString(this.rating) ||
-				!BX.type.isNotEmptyString(this.author) ||
-				!BX.type.isNotEmptyString(this.pages) ||
-				!BX.type.isNotEmptyString(this.description) ||
-				!BX.type.isNotEmptyString(this.title))
+			this.failed = {};
+			let fields = ['rating', 'author', 'pages', 'description', 'title'];
+			for (const index in fields)
 			{
-				return 'Все поля обязательны к заполнению!'
+				if (!BX.type.isNotEmptyString(this[fields[index]]))
+				{
+					this.failed[fields[index]] = {name: fields[index], errorMessage: 'Все поля обязательны к заполнению!', class: 'ui-ctl-danger'};
+				}
+			}
+			if (Object.keys(this.failed).length !== 0)
+			{
+				return;
 			}
 			if (!this.rating.match('^\\d{1,2}$|100'))
 			{
-				return 'Поле "Рейтинг" должно быть числом до 100'
+				this.failed.rating = {name: fields.rating, errorMessage: 'Поле "Рейтинг" должно быть числом до 100', class: 'ui-ctl-danger'};
+				return;
 			}
 			if (!this.pages.match('^\\d*$'))
 			{
-				return 'Поле "Страницы" должно быть числом'
+				this.failed.pages = {name: fields.pages, errorMessage: 'Поле "Страницы" должно быть числом', class: 'ui-ctl-danger'};
 			}
-			return '';
 		},
 
 		save()
 		{
-			let checkResult = this.checkFields();
-			if (checkResult !== '')
+			this.checkFields();
+			console.log(this.failed);
+			if (Object.keys(this.failed).length !== 0)
 			{
-				BX.UI.Notification.Center.notify({ content: checkResult });
+				BX.UI.Notification.Center.notify({ content: this.failed[Object.keys(this.failed)[0]].errorMessage });
 				return;
 			}
 			let params = {
@@ -66,9 +73,12 @@ BitrixVue.component('bookrix-add-book', {
 			this.rating = '';
 			this.pages = '';
 			this.description = '';
+		},
+		getFailedClass(name) {
+			let result = BX.util.in_array(name, Object.keys(this.failed));
+			return result ? 'ui-ctl-danger' : '';
 		}
 	},
-	computed: {},
 	// language=Vue
 	template: `
       <div class="add-container">
@@ -77,36 +87,36 @@ BitrixVue.component('bookrix-add-book', {
 	  </div>
       <div class="add-book">
         <template>
-          <div class="ui-ctl ui-ctl-textbox ui-ctl-w75">
+          <div class="ui-ctl ui-ctl-textbox ui-ctl-w75" :class="getFailedClass('title')">
             <input type="text" class="ui-ctl-element" v-model="title" placeholder="Название">
           </div>
         </template>
 
         <template>
-          <div class="ui-ctl ui-ctl-textbox ui-ctl-w75">
+          <div class="ui-ctl ui-ctl-textbox ui-ctl-w75" :class="getFailedClass('author')">
             <input type="text" class="ui-ctl-element" v-model="author" placeholder="Автор">
           </div>
         </template>
 
         <template>
-          <div class="ui-ctl ui-ctl-textbox ui-ctl-w75">
+          <div class="ui-ctl ui-ctl-textbox ui-ctl-w75" :class="getFailedClass('rating')">
             <input type="text" class="ui-ctl-element" v-model="rating" placeholder="Рейтинг">
           </div>
         </template>
 
         <template>
-          <div class="ui-ctl ui-ctl-textbox ui-ctl-w75">
+          <div class="ui-ctl ui-ctl-textbox ui-ctl-w75" :class="getFailedClass('pages')">
             <input type="text" class="ui-ctl-element" v-model="pages" placeholder="Страниц">
           </div>
         </template>
 
         <template>
-          <div class="ui-ctl ui-ctl-textarea">
+          <div class="ui-ctl ui-ctl-textarea" :class="getFailedClass('description')">
             <textarea class="ui-ctl-element" v-model="description" placeholder="Описание"></textarea>
           </div>
         </template>
         <br>
-        <button class="ui-btn ui-btn-icon-add ui-btn-success" v-on:click="save()">Сохранить</button>
+        <button class="ui-btn ui-btn-icon-add ui-btn-success" @click="save()">Сохранить</button>
       </div>
 
       <bookrix-book :book="{
