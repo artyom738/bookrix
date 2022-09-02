@@ -53,9 +53,15 @@ class BookController extends Main\Engine\Controller
 		return ['ID' => $bookId];
 	}
 
-	public function getByIdAction($id)
+	public function getByIdAction(int $id)
 	{
-		$book = BookTable::getById($id)->fetch();
+		$book = BookTable::getList([
+			'select' => [
+				'AUTHORNAME' => 'AUTHOR.NAME',
+				'*',
+			],
+			'filter' => ['=ID' => $id]
+		])->fetch();
 		$book['DATE_ADD'] = $this->prepateDates($book);
 		return $book;
 	}
