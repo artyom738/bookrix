@@ -1,4 +1,4 @@
-(function (exports,main_core,main_core_events,ui_vue) {
+(function (exports,main_core,ui_dialogs_messagebox,main_core_events,ui_vue) {
 	'use strict';
 
 	var menuItems = [{
@@ -18,9 +18,8 @@
 	      menuItems: menuItems
 	    };
 	  },
-	  computed: {},
 	  // language=Vue
-	  template: "\n      <div class=\"menu\">\n      <div\n          v-for=\"item in menuItems\"\n          class=\"menu-item\">\n        <a v-bind:href=\"item.link\">{{ item.title }}</a>\n      </div>\n      </div>\n\t\t"
+	  template: "\n      <div class=\"menu\">\n      <a\n          v-for=\"item in menuItems\"\n\t\t  :href=\"item.link\"\n          class=\"menu-item\">\n        {{ item.title }}\n      </a>\n      </div>\n\t\t"
 	});
 
 	ui_vue.BitrixVue.component('bookrix-header', {
@@ -166,12 +165,21 @@
 	        return pages;
 	      });
 	    }
+	  }, {
+	    key: "deleteBooks",
+	    value: function deleteBooks(ids) {
+	      return BX.ajax.runAction('up:bookrix.bookcontroller.deleteBooks', {
+	        data: {
+	          ids: ids
+	        }
+	      });
+	    }
 	  }]);
 	  return BooksGetter;
 	}();
 
 	ui_vue.BitrixVue.component('bookrix-book', {
-	  props: ['book', 'showDesc', 'bookId'],
+	  props: ['book', 'showDesc', 'isDetailed', 'bookId'],
 	  data: function data() {
 	    return {
 	      fieldsMap: {
@@ -186,8 +194,6 @@
 	  },
 	  methods: {
 	    getDate: function getDate(date) {
-	      console.log(date);
-	      console.log(BX.date.format('d F Y', date));
 	      return BX.date.format('d F Y', date);
 	    },
 	    loadBook: function loadBook() {
@@ -198,10 +204,15 @@
 	          _this.book = response;
 	        });
 	      }
+	    },
+	    switchBook: function switchBook() {
+	      main_core_events.EventEmitter.emit('Bookrix.switchBook', {
+	        bookId: this.book.ID
+	      });
 	    }
 	  },
 	  // language=Vue
-	  template: "\n\t\t<div class=\"book-item\">\n\t\t\t<div class=\"book-item-title\" v-if=\"book.ID\">\n\t\t\t\t<a v-bind:href=\"'/books/' + book.ID\">{{ book.TITLE }}</a>\n\t\t\t</div>\n\t\t\t<div class=\"book-item-title\" v-else>\n\t\t\t\t{{ book.TITLE }}\n\t\t\t</div>\n\n\t\t\t<template v-for=\"(value, index) in book\">\n\t\t\t\t<div class=\"book-item-spec\" v-if=\"(Object.keys(fieldsMap)).includes(index)\">\n\t\t\t\t\t{{ fieldsMap[index] }}: {{value}}\n\t\t\t\t</div>\n\t\t\t\t<div class=\"book-item-spec\" v-else-if=\"index === 'DATE_ADD'\">\n\t\t\t\t\t\u0414\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0430: {{value}}\n\t\t\t\t</div>\n\t\t\t\t<div class=\"book-item-spec\" v-else-if=\"index === 'DESCRIPTION' && showDesc\">\n\t\t\t\t\t\u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435: {{value}}\n\t\t\t\t</div>\n\t\t\t</template>\n\t\t</div>\n\t"
+	  template: "\n\t\t<div class=\"book-item\">\n\t\t\t<div class=\"book-item-title\" v-if=\"book.ID\">\n\t\t\t\t<a v-bind:href=\"'/books/' + book.ID\">{{ book.TITLE }}</a>\n\t\t\t\t<input type=\"checkbox\" v-if=\"showDesc && !isDetailed\" @change=\"switchBook\">\n\t\t\t</div>\n\t\t\t<div class=\"book-item-title\" v-else>\n\t\t\t\t{{ book.TITLE }}\n\t\t\t</div>\n\n\t\t\t<template v-for=\"(value, index) in book\">\n\t\t\t\t<div class=\"book-item-spec\" v-if=\"(Object.keys(fieldsMap)).includes(index)\">\n\t\t\t\t\t{{ fieldsMap[index] }}: {{value}}\n\t\t\t\t</div>\n\t\t\t\t<div class=\"book-item-spec\" v-else-if=\"index === 'DATE_ADD'\">\n\t\t\t\t\t\u0414\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0430: {{value}}\n\t\t\t\t</div>\n\t\t\t\t<div class=\"book-item-spec\" v-else-if=\"index === 'DESCRIPTION' && showDesc\">\n\t\t\t\t\t\u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435: {{value}}\n\t\t\t\t</div>\n\t\t\t</template>\n\t\t</div>\n\t"
 	});
 
 	ui_vue.BitrixVue.component('bookrix-applied-filters', {
@@ -320,7 +331,8 @@
 	      books: [],
 	      arrayBooks: [],
 	      title: 'Загрузка...',
-	      filters: {}
+	      filters: {},
+	      booksForDelete: []
 	    };
 	  },
 	  created: function created() {
@@ -331,6 +343,9 @@
 	      _this.params.filter = event.data.params;
 
 	      _this.loadBooks();
+	    });
+	    main_core_events.EventEmitter.subscribe('Bookrix.switchBook', function (event) {
+	      _this.addBookForDelete(event.data.bookId);
 	    });
 	  },
 	  methods: {
@@ -368,10 +383,35 @@
 	          'DATE_ADD': 'DESC'
 	        };
 	      }
+	    },
+	    addBookForDelete: function addBookForDelete(id) {
+	      if (!BX.util.in_array(id, this.booksForDelete)) {
+	        this.booksForDelete.push(id);
+	      } else {
+	        var index = this.booksForDelete.indexOf(id);
+	        this.booksForDelete.splice(index, 1);
+	      }
+	    },
+	    showMessageBox: function showMessageBox() {
+	      var _this3 = this;
+
+	      var messageBox = new ui_dialogs_messagebox.MessageBox({
+	        message: "Вы действительно хотите удалить книги? (" + this.booksForDelete.length + ")",
+	        title: "Подтверждение удаления",
+	        buttons: BX.UI.Dialogs.MessageBoxButtons.OK_CANCEL,
+	        okCaption: "Да",
+	        onOk: function onOk() {
+	          BooksGetter.deleteBooks(_this3.booksForDelete).then(function (response) {
+	            messageBox.close();
+	            window.location.reload();
+	          });
+	        }
+	      });
+	      messageBox.show();
 	    }
 	  },
 	  // language=Vue
-	  template: "\n\t\t<div class=\"book-list\">\n\t\t<bookrix-applied-filters/>\n\t\t<div class=\"book-list-title\">\n\t\t\t{{title}}\n\t\t</div>\n\t\t<bookrix-book v-for=\"book in this.books\" :book=\"book\" :showDesc=\"!isMainPage\"/>\n\t\t</div>\n\t\t"
+	  template: "\n\t\t<div class=\"book-list\">\n\t\t<bookrix-applied-filters/>\n\t\t<div class=\"book-list-deleting\" v-if=\"booksForDelete.length > 0\">\u0412\u044B\u0431\u0440\u0430\u043D\u043E \u043A\u043D\u0438\u0433: {{this.booksForDelete.length}}\n\t\t\t<br><button class=\"ui-btn ui-btn-danger\" @click=\"showMessageBox()\">\u0423\u0434\u0430\u043B\u0438\u0442\u044C \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0435 \u043A\u043D\u0438\u0433\u0438</button>\n\t\t</div>\n\t\t<div class=\"book-list-title\">\n\t\t\t{{title}}\n\t\t</div>\n\t\t<bookrix-book v-for=\"book in this.books\" :book=\"book\" :showDesc=\"!isMainPage\" :isDetailed=\"false\"/>\n\t\t</div>\n\t\t"
 	});
 
 	ui_vue.BitrixVue.component('bookrix-book-filters', {
@@ -407,6 +447,8 @@
 
 	      BooksGetter.getAuthors().then(function (response) {
 	        _this2.authors = response;
+	      })["catch"](function (response) {
+	        console.error(response.errors);
 	      });
 	    },
 	    addAuthor: function addAuthor(item) {
@@ -570,7 +612,7 @@
 	  props: ['componentName', 'bookId'],
 	  computed: {},
 	  // language=Vue
-	  template: "\n\t\t<div class=\"page-container\">\n\t\t\t<bookrix-add-book v-if=\"componentName === 'add'\"/>\n\t\t\t\n\t\t\t<div class=\"booklist-container\" v-else-if=\"componentName === 'booklist'\">\n\t\t\t\t<bookrix-book-filters/>\n\t\t\t\t<bookrix-booklist :isMainPage=\"false\"/>\n\t\t\t</div>\n\t\t\t\n\t\t\t<bookrix-book\n\t\t\t\tv-else-if=\"componentName === 'detailed'\"\n\t\t\t\t:bookId=\"bookId\" \n\t\t\t\t:showDesc=\"true\"\n\t\t\t/>\n\t\t\t\n\t\t\t<bookrix-booklist\n\t\t\t\tv-else\n\t\t\t\t:isMainPage=\"true\"\n\t\t\t/>\n\t\t</div>\n\t"
+	  template: "\n\t\t<div class=\"page-container\">\n\t\t\t<bookrix-add-book v-if=\"componentName === 'add'\"/>\n\t\t\t\n\t\t\t<div class=\"booklist-container\" v-else-if=\"componentName === 'booklist'\">\n\t\t\t\t<bookrix-book-filters/>\n\t\t\t\t<bookrix-booklist :isMainPage=\"false\"/>\n\t\t\t</div>\n\t\t\t\n\t\t\t<bookrix-book\n\t\t\t\tv-else-if=\"componentName === 'detailed'\"\n\t\t\t\t:bookId=\"bookId\" \n\t\t\t\t:showDesc=\"true\"\n\t\t\t\t:isDetailed=\"true\"\n\t\t\t/>\n\t\t\t\n\t\t\t<bookrix-booklist\n\t\t\t\tv-else\n\t\t\t\t:isMainPage=\"true\"\n\t\t\t/>\n\t\t</div>\n\t"
 	});
 
 	var BookrixApp = /*#__PURE__*/function () {
@@ -609,4 +651,4 @@
 
 	exports.BookrixApp = BookrixApp;
 
-}((this.BX = this.BX || {}),BX,BX.Event,BX));
+}((this.BX = this.BX || {}),BX,BX.UI.Dialogs,BX.Event,BX));

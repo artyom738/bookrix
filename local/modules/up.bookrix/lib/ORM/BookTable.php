@@ -5,6 +5,7 @@ namespace Up\Bookrix\ORM;
 use Bitrix\Main\ORM;
 use Bitrix\Main\ORM\Data\DataManager;
 use Bitrix\Main\ORM\Fields\DateField;
+use Bitrix\Main\ORM\Fields\ExpressionField;
 use Bitrix\Main\ORM\Fields\IntegerField;
 use Bitrix\Main\ORM\Fields\StringField;
 use Bitrix\Main\Type\Date;
@@ -52,6 +53,9 @@ class BookTable extends DataManager
 				AuthorTable::class,
 				ORM\Query\Join::on('this.AUTHOR_ID', 'ref.ID')
 			),
+			new ExpressionField('DISTINCT_AUTHOR_ID',
+				'DISTINCT %s', ['AUTHOR.ID']
+			)
 		];
 	}
 }

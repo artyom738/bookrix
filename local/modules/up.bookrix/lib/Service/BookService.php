@@ -2,6 +2,8 @@
 
 namespace Up\Bookrix\Service;
 
+use Bitrix\Main\ORM\Fields\ExpressionField;
+use Bitrix\Main\ORM\Query\Query;
 use Bitrix\Main\Type\Date;
 use Up\Bookrix\ORM\AuthorTable;
 use Up\Bookrix\ORM\BookTable;
@@ -114,9 +116,13 @@ class BookService
 
 	public static function getAuthors(): array
 	{
-		return AuthorTable::getList([
-			'select' => ['ID', 'NAME'],
-			'order' => ['NAME']
+		return BookTable::getList([
+			'select' => [
+				new ExpressionField('DISTINCT_AUTHOR_ID', 'DISTINCT %s', 'AUTHOR.ID'),
+				'AUTHOR_NAME_a' => 'AUTHOR.NAME',
+				'AUTHOR_ID_a' => 'AUTHOR.ID',
+			],
+			'order' => ['AUTHOR.NAME']
 		])->fetchAll();
 	}
 

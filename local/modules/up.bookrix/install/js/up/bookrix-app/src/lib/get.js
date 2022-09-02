@@ -43,4 +43,9 @@ export class BooksGetter
 			return pages;
 		});
 	}
+
+	static deleteBooks(ids)
+	{
+		return BX.ajax.runAction('up:bookrix.bookcontroller.deleteBooks', {data: {ids: ids}})
+	}
 }

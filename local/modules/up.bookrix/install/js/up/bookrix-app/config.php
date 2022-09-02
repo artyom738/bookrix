@@ -9,6 +9,7 @@ return [
 	'js' => 'dist/BookrixApp.bundle.js',
 	'rel' => [
 		'main.core',
+		'ui.dialogs.messagebox',
 		'main.core.events',
 		'ui.vue',
 	],

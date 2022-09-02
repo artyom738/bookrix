@@ -9,18 +9,15 @@ BitrixVue.component('bookrix-menu', {
 			menuItems: menuItems,
 		}
 	},
-	computed:
-		{
-
-		},
 	// language=Vue
 	template: `
       <div class="menu">
-      <div
+      <a
           v-for="item in menuItems"
+		  :href="item.link"
           class="menu-item">
-        <a v-bind:href="item.link">{{ item.title }}</a>
-      </div>
+        {{ item.title }}
+      </a>
       </div>
 		`
 });

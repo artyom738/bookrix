@@ -38,6 +38,7 @@ BitrixVue.component('bookrix-book-filters', {
 			BooksGetter.getAuthors().then(response => {
 				this.authors = response;
 			})
+			.catch(response => {console.error(response.errors)})
 		},
 		addAuthor(item)
 		{

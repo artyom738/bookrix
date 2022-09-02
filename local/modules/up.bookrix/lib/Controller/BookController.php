@@ -2,7 +2,6 @@
 
 namespace Up\Bookrix\Controller;
 
-use Bitrix\Forum\Dev\Generator\Book;
 use Bitrix\Main;
 use Up\Bookrix\ORM\BookTable;
 use Up\Bookrix\Service\BookService;
@@ -22,7 +21,16 @@ class BookController extends Main\Engine\Controller
 
 	public function getAuthorsAction(): array
 	{
-		return BookService::getAuthors();
+		$result = [];
+		$getResult = BookService::getAuthors();
+		foreach ($getResult as $author)
+		{
+			$result[] = [
+				'ID' => $author['AUTHOR_ID_a'],
+				'NAME' => $author['AUTHOR_NAME_a'],
+			];
+		}
+		return $result;
 	}
 
 	public function getMinMaxPagesAction(): array
@@ -57,6 +65,14 @@ class BookController extends Main\Engine\Controller
 		return FormatDate('d F Y', MakeTimeStamp($book['DATE_ADD']));
 	}
 
+	public function deleteBooksAction(array $ids)
+	{
+		foreach ($ids as $id)
+		{
+			BookTable::delete($id);
+		}
+	}
+
 	public function configureActions()
 	{
 		return [
@@ -81,6 +97,11 @@ class BookController extends Main\Engine\Controller
 				]
 			],
 			'getById' => [
+				'-prefilters' => [
+					Main\Engine\ActionFilter\Csrf::class,
+				]
+			],
+			'deleteBooks' => [
 				'-prefilters' => [
 					Main\Engine\ActionFilter\Csrf::class,
 				]

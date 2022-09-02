@@ -23,6 +23,7 @@ BitrixVue.component('bookrix-page', {
 				v-else-if="componentName === 'detailed'"
 				:bookId="bookId" 
 				:showDesc="true"
+				:isDetailed="true"
 			/>
 			
 			<bookrix-booklist

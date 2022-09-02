@@ -1,9 +1,10 @@
 import { BitrixVue } from 'ui.vue';
 import './css/Book.css';
 import { BooksGetter } from '../lib/get';
+import { EventEmitter } from 'main.core.events';
 
 BitrixVue.component('bookrix-book', {
-	props: ['book', 'showDesc', 'bookId'],
+	props: ['book', 'showDesc', 'isDetailed', 'bookId'],
 	data()
 	{
 		return {
@@ -21,8 +22,6 @@ BitrixVue.component('bookrix-book', {
 	methods: {
 		getDate(date)
 		{
-			console.log(date);
-			console.log(BX.date.format('d F Y', date));
 			return BX.date.format('d F Y', date);
 		},
 		loadBook()
@@ -34,12 +33,17 @@ BitrixVue.component('bookrix-book', {
 				});
 			}
 		},
+		switchBook()
+		{
+			EventEmitter.emit('Bookrix.switchBook', {bookId: this.book.ID})
+		},
 	},
 	// language=Vue
 	template: `
 		<div class="book-item">
 			<div class="book-item-title" v-if="book.ID">
 				<a v-bind:href="'/books/' + book.ID">{{ book.TITLE }}</a>
+				<input type="checkbox" v-if="showDesc && !isDetailed" @change="switchBook">
 			</div>
 			<div class="book-item-title" v-else>
 				{{ book.TITLE }}

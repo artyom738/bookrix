@@ -12,3 +12,15 @@
 	text-align: center;
 	margin: 20px 0;
 }
+
+.book-list-deleting {
+	display: flex;
+	flex-direction: row;
+	height: 40px;
+	align-items: center;
+	justify-content: space-between;
+	background-color: #fff;
+	border-radius: 20px;
+	padding: 10px;
+	box-shadow: 5px 5px 5px rgb(0 0 0 / 30%);;
+}
