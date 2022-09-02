@@ -377,6 +377,10 @@ footer {
 	        box-shadow: 5px 5px 5px rgba(0,0,0,.3);
 }
 
+.book-item-selected {
+	background-color: #eaf9ff;
+}
+
 .book-item-title {
 	display: -webkit-box;
 	display: -ms-flexbox;

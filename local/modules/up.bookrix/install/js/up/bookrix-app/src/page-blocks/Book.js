@@ -4,7 +4,7 @@ import { BooksGetter } from '../lib/get';
 import { EventEmitter } from 'main.core.events';
 
 BitrixVue.component('bookrix-book', {
-	props: ['book', 'showDesc', 'isDetailed', 'bookId'],
+	props: ['book', 'showDesc', 'isDetailed', 'isSelected', 'bookId'],
 	data()
 	{
 		return {
@@ -40,7 +40,7 @@ BitrixVue.component('bookrix-book', {
 	},
 	// language=Vue
 	template: `
-		<div class="book-item">
+		<div class="book-item" :class="isSelected ? 'book-item-selected' : ''">
 			<div class="book-item-title" v-if="book.ID">
 				<a v-bind:href="'/books/' + book.ID">{{ book.TITLE }}</a>
 				<input type="checkbox" v-if="showDesc && !isDetailed" @change="switchBook">

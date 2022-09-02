@@ -84,6 +84,10 @@ BitrixVue.component('bookrix-booklist', {
 				this.booksForDelete.splice(index, 1);
 			}
 		},
+		isBookSelected(bookId)
+		{
+			return BX.util.in_array(bookId, this.booksForDelete)
+		},
 		showMessageBox()
 		{
 			const messageBox = new MessageBox(
@@ -116,7 +120,13 @@ BitrixVue.component('bookrix-booklist', {
 		<div class="book-list-title">
 			{{title}}
 		</div>
-		<bookrix-book v-for="book in this.books" :book="book" :showDesc="!isMainPage" :isDetailed="false"/>
+		<bookrix-book 
+			v-for="book in this.books" 
+			:book="book" 
+			:showDesc="!isMainPage" 
+			:isDetailed="false"
+			:isSelected="isBookSelected(book.ID)"
+		/>
 		</div>
 		`
 });

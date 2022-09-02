@@ -179,7 +179,7 @@
 	}();
 
 	ui_vue.BitrixVue.component('bookrix-book', {
-	  props: ['book', 'showDesc', 'isDetailed', 'bookId'],
+	  props: ['book', 'showDesc', 'isDetailed', 'isSelected', 'bookId'],
 	  data: function data() {
 	    return {
 	      fieldsMap: {
@@ -212,7 +212,7 @@
 	    }
 	  },
 	  // language=Vue
-	  template: "\n\t\t<div class=\"book-item\">\n\t\t\t<div class=\"book-item-title\" v-if=\"book.ID\">\n\t\t\t\t<a v-bind:href=\"'/books/' + book.ID\">{{ book.TITLE }}</a>\n\t\t\t\t<input type=\"checkbox\" v-if=\"showDesc && !isDetailed\" @change=\"switchBook\">\n\t\t\t</div>\n\t\t\t<div class=\"book-item-title\" v-else>\n\t\t\t\t{{ book.TITLE }}\n\t\t\t</div>\n\n\t\t\t<template v-for=\"(value, index) in book\">\n\t\t\t\t<div class=\"book-item-spec\" v-if=\"(Object.keys(fieldsMap)).includes(index)\">\n\t\t\t\t\t{{ fieldsMap[index] }}: {{value}}\n\t\t\t\t</div>\n\t\t\t\t<div class=\"book-item-spec\" v-else-if=\"index === 'DATE_ADD'\">\n\t\t\t\t\t\u0414\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0430: {{value}}\n\t\t\t\t</div>\n\t\t\t\t<div class=\"book-item-spec\" v-else-if=\"index === 'DESCRIPTION' && showDesc\">\n\t\t\t\t\t\u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435: {{value}}\n\t\t\t\t</div>\n\t\t\t</template>\n\t\t</div>\n\t"
+	  template: "\n\t\t<div class=\"book-item\" :class=\"isSelected ? 'book-item-selected' : ''\">\n\t\t\t<div class=\"book-item-title\" v-if=\"book.ID\">\n\t\t\t\t<a v-bind:href=\"'/books/' + book.ID\">{{ book.TITLE }}</a>\n\t\t\t\t<input type=\"checkbox\" v-if=\"showDesc && !isDetailed\" @change=\"switchBook\">\n\t\t\t</div>\n\t\t\t<div class=\"book-item-title\" v-else>\n\t\t\t\t{{ book.TITLE }}\n\t\t\t</div>\n\n\t\t\t<template v-for=\"(value, index) in book\">\n\t\t\t\t<div class=\"book-item-spec\" v-if=\"(Object.keys(fieldsMap)).includes(index)\">\n\t\t\t\t\t{{ fieldsMap[index] }}: {{value}}\n\t\t\t\t</div>\n\t\t\t\t<div class=\"book-item-spec\" v-else-if=\"index === 'DATE_ADD'\">\n\t\t\t\t\t\u0414\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0430: {{value}}\n\t\t\t\t</div>\n\t\t\t\t<div class=\"book-item-spec\" v-else-if=\"index === 'DESCRIPTION' && showDesc\">\n\t\t\t\t\t\u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435: {{value}}\n\t\t\t\t</div>\n\t\t\t</template>\n\t\t</div>\n\t"
 	});
 
 	ui_vue.BitrixVue.component('bookrix-applied-filters', {
@@ -392,6 +392,9 @@
 	        this.booksForDelete.splice(index, 1);
 	      }
 	    },
+	    isBookSelected: function isBookSelected(bookId) {
+	      return BX.util.in_array(bookId, this.booksForDelete);
+	    },
 	    showMessageBox: function showMessageBox() {
 	      var _this3 = this;
 
@@ -411,7 +414,7 @@
 	    }
 	  },
 	  // language=Vue
-	  template: "\n\t\t<div class=\"book-list\">\n\t\t<bookrix-applied-filters/>\n\t\t<div class=\"book-list-deleting\" v-if=\"booksForDelete.length > 0\">\u0412\u044B\u0431\u0440\u0430\u043D\u043E \u043A\u043D\u0438\u0433: {{this.booksForDelete.length}}\n\t\t\t<br><button class=\"ui-btn ui-btn-danger\" @click=\"showMessageBox()\">\u0423\u0434\u0430\u043B\u0438\u0442\u044C \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0435 \u043A\u043D\u0438\u0433\u0438</button>\n\t\t</div>\n\t\t<div class=\"book-list-title\">\n\t\t\t{{title}}\n\t\t</div>\n\t\t<bookrix-book v-for=\"book in this.books\" :book=\"book\" :showDesc=\"!isMainPage\" :isDetailed=\"false\"/>\n\t\t</div>\n\t\t"
+	  template: "\n\t\t<div class=\"book-list\">\n\t\t<bookrix-applied-filters/>\n\t\t<div class=\"book-list-deleting\" v-if=\"booksForDelete.length > 0\">\u0412\u044B\u0431\u0440\u0430\u043D\u043E \u043A\u043D\u0438\u0433: {{this.booksForDelete.length}}\n\t\t\t<br><button class=\"ui-btn ui-btn-danger\" @click=\"showMessageBox()\">\u0423\u0434\u0430\u043B\u0438\u0442\u044C \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0435 \u043A\u043D\u0438\u0433\u0438</button>\n\t\t</div>\n\t\t<div class=\"book-list-title\">\n\t\t\t{{title}}\n\t\t</div>\n\t\t<bookrix-book \n\t\t\tv-for=\"book in this.books\" \n\t\t\t:book=\"book\" \n\t\t\t:showDesc=\"!isMainPage\" \n\t\t\t:isDetailed=\"false\"\n\t\t\t:isSelected=\"isBookSelected(book.ID)\"\n\t\t/>\n\t\t</div>\n\t\t"
 	});
 
 	ui_vue.BitrixVue.component('bookrix-book-filters', {
