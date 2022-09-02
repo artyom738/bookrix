@@ -416,3 +416,7 @@ footer {
 	cursor: pointer;
 	text-decoration: underline;
 }
+
+.bookrix-filter-item {
+	margin: 5px 0;
+}

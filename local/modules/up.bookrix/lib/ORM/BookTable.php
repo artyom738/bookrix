@@ -5,10 +5,12 @@ namespace Up\Bookrix\ORM;
 use Bitrix\Main\ORM;
 use Bitrix\Main\ORM\Data\DataManager;
 use Bitrix\Main\ORM\Fields\DateField;
+use Bitrix\Main\ORM\Fields\DatetimeField;
 use Bitrix\Main\ORM\Fields\ExpressionField;
 use Bitrix\Main\ORM\Fields\IntegerField;
 use Bitrix\Main\ORM\Fields\StringField;
 use Bitrix\Main\Type\Date;
+use Bitrix\Main\Type\DateTime;
 
 class BookTable extends DataManager
 {
@@ -42,10 +44,10 @@ class BookTable extends DataManager
 			new StringField(
 				'DESCRIPTION',
 			),
-			new DateField(
+			new DatetimeField(
 				'DATE_ADD',
 				[
-					'default_value' => function() { return new Date(); }
+					'default_value' => function() { return new DateTime(); }
 				]
 			),
 			new ORM\Fields\Relations\Reference(

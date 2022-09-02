@@ -62,7 +62,11 @@ class BookController extends Main\Engine\Controller
 
 	private function prepateDates(array $book)
 	{
-		return FormatDate('d F Y', MakeTimeStamp($book['DATE_ADD']));
+		/**
+		 * @var Main\Type\DateTime $date
+		 */
+		$date = $book['DATE_ADD'];
+		return $date->format('d.m.Y H:i');
 	}
 
 	public function deleteBooksAction(array $ids)
