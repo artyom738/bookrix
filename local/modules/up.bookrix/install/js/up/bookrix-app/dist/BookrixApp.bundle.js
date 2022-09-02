@@ -34,7 +34,7 @@
 	    };
 	  },
 	  // language=Vue
-	  template: "\n      <footer>\n      <div class=\"footer-menu\">\n        <div class=\"footer-menu-item\">BOOKRIX</div>\n        <div\n            v-for=\"item in menuItems\"\n            class=\"footer-menu-item\">\n          <a v-bind:href=\"item.link\">{{ item.title }}</a>\n        </div>\n      </div>\n      <div class=\"footer-title\">\n        Bookrix, 2022\n      </div>\n      </footer>\n\t\t"
+	  template: "\n      <footer>\n      <div class=\"footer-menu\">\n        <a class=\"footer-menu-item\" href=\"/\">BOOKRIX</a>\n        <a\n            v-for=\"item in menuItems\"\n\t\t\t:href=\"item.link\"\n            class=\"footer-menu-item\">\n          {{ item.title }}\n        </a>\n      </div>\n      <div class=\"footer-title\">\n        Bookrix, 2022\n      </div>\n      </footer>\n\t\t"
 	});
 
 	ui_vue.BitrixVue.component('bookrix-navbar', {
@@ -542,17 +542,12 @@
 	        }
 	      }
 
-	      if (Object.keys(this.failed).length !== 0) {
-	        return;
-	      }
-
 	      if (!this.rating.match('^\\d{1,2}$|100')) {
 	        this.failed.rating = {
 	          name: fields.rating,
 	          errorMessage: 'Поле "Рейтинг" должно быть числом до 100',
 	          "class": 'ui-ctl-danger'
 	        };
-	        return;
 	      }
 
 	      if (!this.pages.match('^\\d*$')) {

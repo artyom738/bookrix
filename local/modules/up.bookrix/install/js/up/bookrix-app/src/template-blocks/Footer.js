@@ -13,12 +13,13 @@ BitrixVue.component('bookrix-footer', {
 	template: `
       <footer>
       <div class="footer-menu">
-        <div class="footer-menu-item">BOOKRIX</div>
-        <div
+        <a class="footer-menu-item" href="/">BOOKRIX</a>
+        <a
             v-for="item in menuItems"
+			:href="item.link"
             class="footer-menu-item">
-          <a v-bind:href="item.link">{{ item.title }}</a>
-        </div>
+          {{ item.title }}
+        </a>
       </div>
       <div class="footer-title">
         Bookrix, 2022

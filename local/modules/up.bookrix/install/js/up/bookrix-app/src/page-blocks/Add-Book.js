@@ -27,14 +27,9 @@ BitrixVue.component('bookrix-add-book', {
 					this.failed[fields[index]] = {name: fields[index], errorMessage: 'Все поля обязательны к заполнению!', class: 'ui-ctl-danger'};
 				}
 			}
-			if (Object.keys(this.failed).length !== 0)
-			{
-				return;
-			}
 			if (!this.rating.match('^\\d{1,2}$|100'))
 			{
 				this.failed.rating = {name: fields.rating, errorMessage: 'Поле "Рейтинг" должно быть числом до 100', class: 'ui-ctl-danger'};
-				return;
 			}
 			if (!this.pages.match('^\\d*$'))
 			{

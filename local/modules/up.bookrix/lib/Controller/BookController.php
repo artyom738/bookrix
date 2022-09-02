@@ -83,31 +83,37 @@ class BookController extends Main\Engine\Controller
 			'getBooks' => [
 				'-prefilters' => [
 					Main\Engine\ActionFilter\Csrf::class,
+					Main\Engine\ActionFilter\Authentication::class,
 				]
 			],
 			'addBook' => [
 				'-prefilters' => [
 					Main\Engine\ActionFilter\Csrf::class,
+					Main\Engine\ActionFilter\Authentication::class,
 				]
 			],
 			'getAuthors' => [
 				'-prefilters' => [
 					Main\Engine\ActionFilter\Csrf::class,
+					Main\Engine\ActionFilter\Authentication::class,
 				]
 			],
 			'getMinMaxPages' => [
 				'-prefilters' => [
 					Main\Engine\ActionFilter\Csrf::class,
+					Main\Engine\ActionFilter\Authentication::class,
 				]
 			],
 			'getById' => [
 				'-prefilters' => [
 					Main\Engine\ActionFilter\Csrf::class,
+					Main\Engine\ActionFilter\Authentication::class,
 				]
 			],
 			'deleteBooks' => [
 				'-prefilters' => [
 					Main\Engine\ActionFilter\Csrf::class,
+					Main\Engine\ActionFilter\Authentication::class,
 				]
 			],
 		];
