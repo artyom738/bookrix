@@ -13,6 +13,7 @@ BitrixVue.component('bookrix-book-filters', {
 			filters: {
 				title: '',
 				authors: {},
+				authorIds: [],
 				pagesMin: null,
 				pagesMax: null,
 				ratingMin: null,
@@ -44,22 +45,23 @@ BitrixVue.component('bookrix-book-filters', {
 		{
 			if (BX.util.in_array(item.ID, BX.util.array_keys(this.filters.authors)))
 			{
+				const index = this.filters.authorIds.indexOf(item.ID);
+				this.filters.authorIds.splice(index, 1);
 				delete this.filters.authors[item.ID];
 			}
 			else
 			{
+				this.filters.authorIds.push(item.ID);
 				this.filters.authors[item.ID] = item.NAME;
 			}
-			return item.ID;
 		},
 		resetAuthors()
 		{
 		},
 		getAuthorClass(item)
 		{
-			return {
-				'bookrix-filter-author-selected': BX.util.in_array(item.ID, BX.util.array_keys(this.filters.authors)),
-			}
+			const result = BX.util.in_array(item.ID, this.filters.authorIds);
+			return result ? 'bookrix-filter-author-selected' : '';
 		},
 		getPagesMax()
 		{
@@ -74,6 +76,7 @@ BitrixVue.component('bookrix-book-filters', {
 					break;
 				case 'authors':
 					this.filters.authors = {};
+					this.filters.authorIds = [];
 					this.resetAuthors();
 					break;
 				case 'pagesMin':
@@ -120,10 +123,10 @@ BitrixVue.component('bookrix-book-filters', {
 				<div class="bookrix-filter-subtitle">Автор</div>
 				<div class="bookrix-filter-authors">
 					<div
-						class="bookrix-filter-author"
-						:class="getAuthorClass(item)"
 						v-for="item in authors"
 						:id="item.ID"
+						class="bookrix-filter-author"
+						:class="getAuthorClass(item)"
 						@click="addAuthor(item)"
 					>
 						{{item.NAME}}

@@ -115,11 +115,13 @@ BitrixVue.component('bookrix-applied-filters', {
 		<div class="bookrix-apllied-filters" v-if="!isEmptyFilters()">
 		<div class="bookrix-filter-title">Примененные фильтры:</div>
 		
-		<div class="bookrix-filter-item">Всего фильтров: {{ Object.keys(filters).length }}</div>
+		<div class="bookrix-filter-item">Всего фильтров: {{ Object.keys(filters).length }}
 		<a
 			class="bookrix-applied-filter-reset"
 			@click="resetAllFilters(filters)"
-		>(сбросить все)</a><br>
+		>(сбросить все)</a>
+		</div>
+		<br>
 		
 		<template v-for="(object, filterName) in filters">
 			<div class="bookrix-filter-item" v-if="object.value">
